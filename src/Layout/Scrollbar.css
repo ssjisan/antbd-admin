@@ -1,0 +1,24 @@
+/* Scrollbar track */
+::-webkit-scrollbar {
+  width: 5px; /* Hide the scrollbar by default */
+  height: 5px; /* Set horizontal scrollbar height */
+}
+
+/* Show scrollbar when hovering over the sidebar */
+.sidebar ::-webkit-scrollbar {
+  width: 0px; /* Set the width of the scrollbar */
+  transition: width 5s ease-in-out; /* Add transition for smooth visibility change */
+  height: 5px; /* Set horizontal scrollbar height */
+}
+
+/* Show scrollbar when hovering over the sidebar */
+.sidebar:hover ::-webkit-scrollbar {
+  width: 5px; /* Set the width of the scrollbar */
+  transition: width 5s ease-in-out; /* Add transition for smooth visibility change */
+}
+
+/* Scrollbar thumb */
+::-webkit-scrollbar-thumb {
+  background: rgb(218, 218, 218);
+  border-radius: 10px; /* Rounded corners of the thumb */
+}
