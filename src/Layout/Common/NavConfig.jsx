@@ -1,6 +1,6 @@
 import { DataContext } from "../../DataProcessing/DataProcessing";
 import { useContext } from "react";
-import { Dashboard, Coverage } from "../../assets/IconSet";
+import { Dashboard, Coverage, Package } from "../../assets/IconSet";
 
 const navConfig = ({ pathname }) => {
   const { auth } = useContext(DataContext);
@@ -49,6 +49,30 @@ const navConfig = ({ pathname }) => {
         },
       ],
     },
+    {
+      title: "Packages",
+      icon: (
+        <Package
+          color={
+            pathname.startsWith("/package-list") ||
+            pathname.startsWith("/add-package")
+              ? "#00AE60"
+              : "#637381"
+          }
+          size={20}
+        />
+      ),
+      items: [
+        {
+          title: "Add Package",
+          link: "/add-package",
+        },
+        {
+          title: "Package List",
+          link: "/package-list",
+        },
+      ],
+    },
   ];
 
   // Only show Students for role 2
@@ -91,6 +115,30 @@ const navConfig = ({ pathname }) => {
         {
           title: "Coverage List",
           link: "/coverage-list",
+        },
+      ],
+    },
+    {
+      title: "Packages",
+      icon: (
+        <Package
+          color={
+            pathname.startsWith("/package-list") ||
+            pathname.startsWith("/add-package")
+              ? "#00AE60"
+              : "#637381"
+          }
+          size={20}
+        />
+      ),
+      items: [
+        {
+          title: "Add Package",
+          link: "/add-package",
+        },
+        {
+          title: "Package List",
+          link: "/package-list",
         },
       ],
     },

@@ -9,6 +9,8 @@ import UserList from "../Page/User/UserList";
 import AddCoverageArea from "../Page/Coverage/AddCoverageArea";
 import CoverageAreaList from "../Page/Coverage/CoverageAreaList";
 import AddZone from "../Page/Coverage/AddZone";
+import AddPackage from "../Page/Package/AddPackage";
+import PackageList from "../Page/Package/PackageList";
 
 export default function MainRouters() {
   return (
@@ -52,7 +54,12 @@ export default function MainRouters() {
           <Route path="/edit-coverage/:id" element={<AddCoverageArea/>}/>
           <Route path="/coverage-list" element={<CoverageAreaList/>}/>
           <Route path="/add-zone" element={<AddZone/>}/>
-          
+          {/* Coverage Area Route End Here */}
+
+          {/* Coverage Area Route Start Here */}
+          <Route path="/package-list" element={<PackageList/>}/>
+          <Route path="/add-package" element={<AddPackage/>}/>
+          <Route path="/edit-package/:id" element={<AddPackage/>}/>
           {/* Coverage Area Route End Here */}
         </Route>
         {/* <Route path="*" element={<ErrorPage />} replace /> */}
