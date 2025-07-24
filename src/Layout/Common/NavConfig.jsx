@@ -1,6 +1,6 @@
 import { DataContext } from "../../DataProcessing/DataProcessing";
 import { useContext } from "react";
-import { Dashboard, Coverage, Package } from "../../assets/IconSet";
+import { Dashboard, Coverage, Package, ConnectionRequest } from "../../assets/IconSet";
 
 const navConfig = ({ pathname }) => {
   const { auth } = useContext(DataContext);
@@ -17,6 +17,18 @@ const navConfig = ({ pathname }) => {
         {
           title: "Dashboard",
           link: "/",
+        },
+      ],
+    },
+    {
+      title: "Connection Request",
+      icon: (
+        <ConnectionRequest color={pathname === "/connection-request" ? "#00AE60" : "#637381"} size={20} />
+      ),
+      items: [
+        {
+          title: "Connection Request",
+          link: "/connection-request",
         },
       ],
     },

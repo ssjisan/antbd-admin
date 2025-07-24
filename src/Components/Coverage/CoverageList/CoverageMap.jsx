@@ -1,50 +1,103 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Backdrop from "@mui/material/Backdrop";
 import { Box, IconButton, Stack, Typography } from "@mui/material";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
 import { Cross } from "../../../assets/IconSet";
+
+const loadGoogleMaps = (callback) => {
+  if (
+    typeof window.google === "object" &&
+    typeof window.google.maps === "object"
+  ) {
+    callback();
+    return;
+  }
+
+  const existingScript = document.querySelector("script[src*='maps.googleapis']");
+  if (existingScript) {
+    existingScript.addEventListener("load", callback);
+    return;
+  }
+
+  const script = document.createElement("script");
+  script.src =
+    "https://maps.googleapis.com/maps/api/js?key=AIzaSyDo6tI6z6qCTkXDp-pSl8F22SvsvNR1rOA&libraries=drawing,geometry,places";
+  script.async = true;
+  script.onload = callback;
+  document.head.appendChild(script);
+};
 
 export default function CoverageMap({ onClose, isMapModalOpen, polygonData }) {
   const mapRef = useRef(null);
-  const mapContainerRef = useRef(null);
+  const polygonsRef = useRef([]);
+  const [mapKey, setMapKey] = useState(0);
 
-  const initializeMap = () => {
-    const container = mapContainerRef.current;
-    if (!container || !polygonData?.length) return;
-
-    // Remove existing map if present
-    if (mapRef.current) {
-      mapRef.current.remove();
-      mapRef.current = null;
-    }
-
-    const firstCoord = polygonData[0].coordinates[0];
-    const map = L.map(container).setView(firstCoord, 17);
-    mapRef.current = map;
-
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: "&copy; OpenStreetMap contributors",
-    }).addTo(map);
-
-    polygonData.forEach((poly) => {
-      const latlngs = poly.coordinates.map(([lat, lng]) => [lat, lng]);
-      const polygon = L.polygon(latlngs, { color: "blue" }).addTo(map);
-      map.fitBounds(polygon.getBounds());
-    });
-  };
-
-  const handleFadeEntered = () => {
-    setTimeout(() => {
-      initializeMap();
+  useEffect(() => {
+    if (!isMapModalOpen) {
+      polygonsRef.current.forEach((polygon) => polygon.setMap(null));
+      polygonsRef.current = [];
       if (mapRef.current) {
-        mapRef.current.invalidateSize();
+        mapRef.current = null;
       }
-    }, 300); // slight delay ensures container is fully visible
-  };
+      return;
+    }
+    setMapKey((k) => k + 1);
+  }, [isMapModalOpen]);
+
+  useEffect(() => {
+    if (!isMapModalOpen) return;
+    if (!polygonData?.length) return;
+
+    const init = () => {
+      polygonsRef.current.forEach((polygon) => polygon.setMap(null));
+      polygonsRef.current = [];
+
+      const container = document.getElementById("google-map-container");
+      if (!container) return;
+
+      const map = new window.google.maps.Map(container, {
+        center: { lat: 23.8103, lng: 90.4125 },
+        zoom: 13,
+        zoomControl: true,
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: false,
+      });
+      mapRef.current = map;
+
+      const allBounds = new window.google.maps.LatLngBounds();
+
+      polygonData.forEach((poly) => {
+        const path = poly.coordinates.map(([lat, lng]) => ({ lat, lng }));
+        const polygon = new window.google.maps.Polygon({
+          paths: path,
+          strokeColor: "#4285F4",
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: "#4285F4",
+          fillOpacity: 0.35,
+        });
+
+        polygon.setMap(map);
+        polygonsRef.current.push(polygon);
+
+        path.forEach((point) => allBounds.extend(point));
+      });
+
+      map.fitBounds(allBounds);
+    };
+
+    if (
+      typeof window.google === "object" &&
+      typeof window.google.maps === "object"
+    ) {
+      init();
+    } else {
+      loadGoogleMaps(init);
+    }
+  }, [isMapModalOpen, polygonData, mapKey]);
 
   return (
     <Modal
@@ -54,7 +107,7 @@ export default function CoverageMap({ onClose, isMapModalOpen, polygonData }) {
       slots={{ backdrop: Backdrop }}
       slotProps={{ backdrop: { timeout: 500 } }}
     >
-      <Fade in={isMapModalOpen} onEntered={handleFadeEntered}>
+      <Fade in={isMapModalOpen}>
         <Box
           sx={{
             position: "absolute",
@@ -84,16 +137,12 @@ export default function CoverageMap({ onClose, isMapModalOpen, polygonData }) {
           </Stack>
 
           <Box
-            ref={mapContainerRef}
-            id="leaflet-map-container"
+            id="google-map-container"
+            key={mapKey}
             sx={{
               flex: 1,
               height: "100%",
               width: "100%",
-              "& .leaflet-container": {
-                height: "100%",
-                width: "100%",
-              },
             }}
           />
         </Box>
