@@ -13,43 +13,44 @@ const Map = ({ searchQuery, setSearchQuery, polygons, setPolygons }) => {
   const searchMarkerRef = useRef(null);
   const geocoderRef = useRef(null);
   const mapClickListenerRef = useRef(null);
-  console.log(polygons);
 
   // Load polygons from localStorage
   useEffect(() => {
-    if (window.google && googleMap) {
-      const saved = localStorage.getItem("savedPolygons");
-      if (saved) {
-        const pathsArray = JSON.parse(saved);
-        setPolygons(pathsArray);
-        const bounds = new window.google.maps.LatLngBounds();
+    if (window.google && googleMap && Array.isArray(polygons)) {
+      // Clear any previously drawn polygons
+      polygonsRef.current.forEach((polygon) => polygon.setMap(null));
+      polygonsRef.current = [];
 
-        pathsArray.forEach((polyObj) => {
-          const path = polyObj.coordinates.map(([lat, lng]) => {
-            const latLng = new window.google.maps.LatLng(lat, lng);
-            bounds.extend(latLng);
-            return { lat, lng };
-          });
+      const bounds = new window.google.maps.LatLngBounds();
 
-          const polygon = new window.google.maps.Polygon({
-            paths: path,
-            map: googleMap,
-            editable: false,
-            strokeColor: "#FF0000",
-            fillColor: "#FF0000",
-            strokeWeight: 2,
-            clickable: false,
-          });
+      polygons.forEach((polyObj) => {
+        if (!polyObj || !Array.isArray(polyObj.coordinates)) return;
 
-          polygonsRef.current.push(polygon);
+        const path = polyObj.coordinates.map(([lat, lng]) => {
+          const latLng = new window.google.maps.LatLng(lat, lng);
+          bounds.extend(latLng);
+          return { lat, lng };
         });
 
-        if (!bounds.isEmpty()) {
-          googleMap.fitBounds(bounds);
-        }
+        const polygon = new window.google.maps.Polygon({
+          paths: path,
+          map: googleMap,
+          editable: false,
+          strokeColor: "#FF0000",
+          fillColor: "#FF0000",
+          strokeOpacity: 0.4,
+          strokeWeight: 2,
+          clickable: false,
+        });
+
+        polygonsRef.current.push(polygon);
+      });
+
+      if (!bounds.isEmpty()) {
+        googleMap.fitBounds(bounds);
       }
     }
-  }, [googleMap]);
+  }, [googleMap, polygons]);
 
   // Init Map
   useEffect(() => {
@@ -253,8 +254,6 @@ const Map = ({ searchQuery, setSearchQuery, polygons, setPolygons }) => {
       polygon.setEditable(true);
 
       const path = polygon.getPath();
-
-      // Update saved polygons whenever a vertex is moved or changed
       window.google.maps.event.addListener(path, "set_at", savePolygons);
       window.google.maps.event.addListener(path, "insert_at", savePolygons);
       window.google.maps.event.addListener(path, "remove_at", savePolygons);
@@ -287,6 +286,7 @@ const Map = ({ searchQuery, setSearchQuery, polygons, setPolygons }) => {
       polygon._deleteListener = clickListener;
     });
   };
+
   useEffect(() => {
     if (activeTool !== "delete") {
       polygonsRef.current.forEach((polygon) => {
@@ -311,7 +311,7 @@ const Map = ({ searchQuery, setSearchQuery, polygons, setPolygons }) => {
     }
   };
 
-  // ✅ SAVE with coordinates: [[lat, lng]]
+  // Save polygons with coordinates: [[lat, lng]]
   const savePolygons = () => {
     const data = polygonsRef.current.map((polygon) => {
       const path = polygon.getPath();
@@ -476,19 +476,23 @@ const Map = ({ searchQuery, setSearchQuery, polygons, setPolygons }) => {
       {/* Display coordinates */}
       <div style={{ marginTop: 20, paddingBottom: 20 }}>
         <h3>Saved Polygon Coordinates</h3>
-        {polygons.length === 0 && <p>No polygons drawn yet.</p>}
-        {polygons.map((poly, index) => (
-          <div key={index} style={{ marginBottom: 15 }}>
-            <strong>Polygon {index + 1}:</strong>
-            <ul style={{ paddingLeft: 20, marginTop: 5 }}>
-              {poly.coordinates.map(([lat, lng], idx) => (
-                <li key={idx}>
-                  Lat: {lat.toFixed(5)}, Lng: {lng.toFixed(5)}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+        {(!Array.isArray(polygons) || polygons.length === 0) && (
+          <p>No polygons drawn yet.</p>
+        )}
+        {Array.isArray(polygons) &&
+          polygons.map((poly, index) => (
+            <div key={index} style={{ marginBottom: 15 }}>
+              <strong>Polygon {index + 1}:</strong>
+              <ul style={{ paddingLeft: 20, marginTop: 5 }}>
+                {Array.isArray(poly.coordinates) &&
+                  poly.coordinates.map(([lat, lng], idx) => (
+                    <li key={idx}>
+                      Lat: {lat.toFixed(5)}, Lng: {lng.toFixed(5)}
+                    </li>
+                  ))}
+              </ul>
+            </div>
+          ))}
       </div>
 
       <style>{`
