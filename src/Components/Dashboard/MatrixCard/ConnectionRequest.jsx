@@ -1,9 +1,7 @@
 import { Box, Stack, Typography } from "@mui/material";
-import { useState } from "react";
+import PropTypes from "prop-types";
 
-export default function AlbumCount() {
-    const [albums, setAlbums] = useState([]);
-  
+export default function ConnectionRequest({ count }) {
   return (
     <Box
       sx={{
@@ -17,15 +15,21 @@ export default function AlbumCount() {
         alignItems: "center",
       }}
     >
-      <Box sx={{width:"64px", height:"64px"}}>
-        <img src="https://res.cloudinary.com/dmyttqosa/image/upload/v1745491939/album_rebzru.png" style={{width:"100%"}}/>
+      <Box sx={{ width: "64px", height: "64px" }}>
+        <img
+          src="https://res.cloudinary.com/dr0jcn0ds/image/upload/v1753597145/dashboard/kpi/request_t5qox0.png"
+          style={{ width: "100%" }}
+        />
       </Box>
       <Stack>
-        <Typography variant="h4">{albums.length}</Typography>
+        <Typography variant="h4">{count}</Typography>
         <Typography variant="subtitle2" color="text.secondary">
-          Total Album
+          Total connection request
         </Typography>
       </Stack>
     </Box>
   );
 }
+ConnectionRequest.propTypes = {
+  count: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};

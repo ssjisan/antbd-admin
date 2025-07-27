@@ -1,10 +1,7 @@
 import { Box, Stack, Typography } from "@mui/material";
-// import { MatrixIconVideos } from "../../../assets/Icons/MatrixIconVideos";
-import {  useState } from "react";
-export default function VideoCount() {
-  const [videos, setVideos] = useState([]);
+import PropTypes from "prop-types";
 
-  
+export default function TotalArea({ count }) {
   return (
     <Box
       sx={{
@@ -19,14 +16,20 @@ export default function VideoCount() {
       }}
     >
       <Box sx={{ width: "64px", height: "64px" }}>
-        <img src="https://res.cloudinary.com/dmyttqosa/image/upload/v1745491938/video_ce5xtk.png" style={{ width: "100%" }} />
+        <img
+          src="https://res.cloudinary.com/dr0jcn0ds/image/upload/v1753596811/dashboard/kpi/3d-map_ecwoou.png"
+          style={{ width: "100%" }}
+        />
       </Box>
       <Stack>
-        <Typography variant="h4">{videos.length}</Typography>
+        <Typography variant="h4">{count}</Typography>
         <Typography variant="subtitle2" color="text.secondary">
-          Total Videos
+          Total area covered
         </Typography>
       </Stack>
     </Box>
   );
 }
+TotalArea.propTypes = {
+  count: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};

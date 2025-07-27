@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import { Box, Table } from "@mui/material";
+import { Box, Button, Stack, Table } from "@mui/material";
 import CustomeHeader from "../../Components/Common/Table/CustomeHeader";
 import CustomePagination from "../../Components/Common/Table/CustomePagination";
 import toast from "react-hot-toast";
@@ -41,7 +41,7 @@ export default function View() {
       toast.error("Failed to load packages");
     }
   };
-  
+
   const handleOpenMenu = (event, areaId) => {
     setOpen(event.currentTarget);
     setSelectedRowId(areaId);
@@ -118,6 +118,9 @@ export default function View() {
         mt: 3,
       }}
     >
+      <Stack sx={{py:2, width:"100%"}} flexDirection="row" justifyContent="flex-end">
+        <Button sx={{width:"fit-content"}}>Download</Button>
+      </Stack>
       <Box
         sx={{
           overflowX: "auto",
@@ -133,7 +136,7 @@ export default function View() {
             includeDrag={false}
           />
           <Body
-          packages={packages}
+            packages={packages}
             connectionRequests={connectionRequests}
             page={page}
             rowsPerPage={rowsPerPage}
