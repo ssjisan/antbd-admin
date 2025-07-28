@@ -12,6 +12,7 @@ import AddZone from "../Page/Coverage/AddZone";
 import AddPackage from "../Page/Package/AddPackage";
 import PackageList from "../Page/Package/PackageList";
 import ConnectionRequest from "../Page/ConnectionRequest";
+import Client from "../Page/Client";
 
 export default function MainRouters() {
   return (
@@ -44,6 +45,7 @@ export default function MainRouters() {
         <Route path="/login" element={<Login />} />
         <Route path="" element={<PrivateRoute />}>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/client" element={<Client />} />
           <Route path="/connection-request" element={<ConnectionRequest />} />
           {/* User Routes Start */}
           <Route path="/create_use" element={<AddUser />} />

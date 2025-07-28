@@ -1,6 +1,6 @@
 import { DataContext } from "../../DataProcessing/DataProcessing";
 import { useContext } from "react";
-import { Dashboard, Coverage, Package, ConnectionRequest } from "../../assets/IconSet";
+import { Dashboard, Coverage, Package, ConnectionRequest, HappyClient } from "../../assets/IconSet";
 
 const navConfig = ({ pathname }) => {
   const { auth } = useContext(DataContext);
@@ -82,6 +82,18 @@ const navConfig = ({ pathname }) => {
         {
           title: "Package List",
           link: "/package-list",
+        },
+      ],
+    },
+    {
+      title: "Client",
+      icon: (
+        <HappyClient color={pathname === "/client" ? "#00AE60" : "#637381"} size={20} />
+      ),
+      items: [
+        {
+          title: "Client",
+          link: "/client",
         },
       ],
     },

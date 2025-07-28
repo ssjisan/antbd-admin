@@ -78,7 +78,7 @@ export default function Form({
                 Click here to upload a cover
               </Typography>
               <Typography variant="body2" sx={{ color: "#919EAB", fontWeight: 500 }}>
-                Allowed *.jpeg, *.jpg, *.png, *.gif max size of 3 Mb
+                Allowed *.jpeg, *.jpg, *.png max size of 3 Mb
               </Typography>
             </Stack>
           )}
