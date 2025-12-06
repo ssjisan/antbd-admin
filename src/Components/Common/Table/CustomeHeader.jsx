@@ -22,7 +22,15 @@ export default function CustomeHeader({
           </TableCell>
         ))}
         {includeActions && (
-          <TableCell align="center" sx={{ width: "88px" }}></TableCell>
+          <TableCell
+            align="center"
+            sx={{
+              width: "64px",
+              position: "sticky", // Sticky to the right
+              right: 0,
+              zIndex: 3, // Above the table body
+            }}
+          ></TableCell>
         )}
       </TableRow>
     </TableHead>

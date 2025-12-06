@@ -8,7 +8,7 @@ import {
 import { BurgerMenu } from "../assets/IconSet";
 import AccountPopOver from "./Common/AccountPopOver";
 
-const drawerWidth = 280;
+const drawerWidth = 260;
 // eslint-disable-next-line
 export default function Navbar({ handleDrawerToggle }) {
   // eslint-disable-next-line

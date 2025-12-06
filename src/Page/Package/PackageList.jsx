@@ -3,7 +3,7 @@ import Sidebar from "../../Layout/Sidebar";
 import View from "../../Components/Package/PackageList/View";
 
 export default function PackageList() {
-  const drawerWidth = 280;
+  const drawerWidth = 260;
   const forBelow1200 = useMediaQuery("(min-width:1200px)");
   return (
     <Box>

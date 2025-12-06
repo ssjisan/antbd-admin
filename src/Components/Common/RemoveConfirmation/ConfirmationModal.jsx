@@ -1,7 +1,8 @@
 import PropTypes from "prop-types";
 import Modal from "@mui/material/Modal";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography, TextField } from "@mui/material";
 import { Warning } from "../../../assets/IconSet";
+import { useState } from "react";
 
 export default function ConfirmationModal({
   open,
@@ -10,10 +11,18 @@ export default function ConfirmationModal({
   itemName = "",
   onClose,
   onConfirm,
-  confirmLabel = "Yes, Delete",
+  confirmLabel = "Confirm",
   cancelLabel = "Cancel",
-  confirmColor = "error",
+  confirmColor = "primary",
+  showRemarks = false, // ✅ new prop
 }) {
+  const [remarks, setRemarks] = useState("");
+
+  const handleConfirm = () => {
+    onConfirm(remarks); // ✅ send remarks to parent
+    setRemarks("");
+  };
+
   return (
     <Modal open={open} onClose={onClose}>
       <div
@@ -28,6 +37,7 @@ export default function ConfirmationModal({
           maxWidth: "90%",
         }}
       >
+        {/* Header */}
         <Box
           sx={{
             p: "16px",
@@ -38,6 +48,8 @@ export default function ConfirmationModal({
             {title}
           </Typography>
         </Box>
+
+        {/* Content */}
         <Stack
           gap="16px"
           justifyContent={"center"}
@@ -45,7 +57,10 @@ export default function ConfirmationModal({
           sx={{ p: "24px 16px" }}
         >
           <Warning size="48px" color="#dc3545" />
-          <Typography variant="body1" sx={{ textAlign: "center" }}>
+          <Typography
+            variant="body1"
+            sx={{ textAlign: "center", whiteSpace: "pre-line" }}
+          >
             {message || (
               <>
                 Are you sure you want to delete{" "}
@@ -53,7 +68,25 @@ export default function ConfirmationModal({
               </>
             )}
           </Typography>
+
+          {/* ✅ Remarks input (visible only when showRemarks = true) */}
+          {showRemarks && (
+            <TextField
+              label="Remarks"
+              multiline
+              minRows={3}
+              fullWidth
+              value={remarks}
+              onChange={(e) => setRemarks(e.target.value)}
+              placeholder="Write your remarks here..."
+              sx={{
+                mt: 2,
+              }}
+            />
+          )}
         </Stack>
+
+        {/* Actions */}
         <Stack
           direction={"row"}
           gap="16px"
@@ -63,7 +96,11 @@ export default function ConfirmationModal({
           <Button onClick={onClose} color="inherit">
             {cancelLabel}
           </Button>
-          <Button onClick={onConfirm} variant="contained" color={confirmColor}>
+          <Button
+            onClick={handleConfirm}
+            variant="contained"
+            color={confirmColor}
+          >
             {confirmLabel}
           </Button>
         </Stack>
@@ -82,4 +119,5 @@ ConfirmationModal.propTypes = {
   confirmLabel: PropTypes.string,
   cancelLabel: PropTypes.string,
   confirmColor: PropTypes.string,
+  showRemarks: PropTypes.bool, // ✅ new
 };

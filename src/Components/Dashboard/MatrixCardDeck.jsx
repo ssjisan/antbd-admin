@@ -20,7 +20,7 @@ export default function MatrixCardDeck() {
       try {
         const res = await axios.get("/summary");
         setSummary(res.data);
-        toast.success("Dashboard data loaded successfully!");
+        // toast.success("Dashboard data loaded successfully!");
       } catch (err) {
         console.error(err);
         toast.error("Failed to load dashboard data");

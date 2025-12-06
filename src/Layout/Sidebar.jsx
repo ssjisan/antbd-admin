@@ -19,7 +19,7 @@ import "./Scrollbar.css";
 import { ArrowDown, Bullet } from "../assets/IconSet";
 import { Logo } from "../assets/Logo";
 
-const drawerWidth = 280;
+const drawerWidth = 260;
 
 function Sidebar(props) {
   const { window } = props;
@@ -58,12 +58,12 @@ function Sidebar(props) {
         sx={{
           display: "flex",
           flexDirection: "column",
-          gap: "40px",
+          gap: "24px",
           p: "16px",
         }}
       >
         <Box sx={{ ml: "24px" }}>
-          <Logo width={"40px"} height={"40px"} />
+          <Logo width={"56px"} height={"56px"} />
         </Box>
         <List>
           {navConfig({ pathname }).map((section) => {
@@ -88,11 +88,12 @@ function Sidebar(props) {
                   padding: "8px 16px",
                   height: "44px",
                   mb: "8px",
+                   
                   background:
                     pathname === section.items[0].link &&
-                    "rgba(6, 4, 21, 0.04)",
+                    "rgba(239, 229, 255, 1)",
                   color:
-                    pathname === section.items[0].link ? "#00AE60" : "#637381",
+                    pathname === section.items[0].link ? "#792df8" : "#637381",
                 }}
               >
                 <ListItemIcon sx={{ minWidth: "36px" }}>
@@ -138,10 +139,10 @@ function Sidebar(props) {
                     minHeight: "44px",
                     margin: "0px",
                     backgroundColor: isSectionActive
-                      ? "rgba(0 ,174, 96, 0.12)"
+                      ? "rgba(239, 229, 255, 1)"
                       : "transparent",
                     "&:hover": {
-                      backgroundColor: "#EFF0F1",
+                      backgroundColor: "#eff0f2",
                     },
                     "&.Mui-expanded": {
                       minHeight: "44px",
@@ -160,7 +161,7 @@ function Sidebar(props) {
                   </ListItemIcon>
                   <Typography
                     variant="overline"
-                    color={isSectionActive ? "#00AE60" : "#637381"}
+                    color={isSectionActive ? "#792df8" : "#637381"}
                     sx={{
                       fontSize: "14px",
                       textTransform: "none",

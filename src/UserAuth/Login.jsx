@@ -40,7 +40,7 @@ export default function Login() {
           zIndex: 10,
         }}
       >
-        <Logo width={"32px"} height={"32px"} />
+        <Logo width={"64px"} height={"64px"} />
       </Stack>
 
       {/* Content Section */}

@@ -11,7 +11,7 @@ const navConfig = ({ pathname }) => {
     {
       title: "Overview",
       icon: (
-        <Dashboard color={pathname === "/" ? "#00AE60" : "#637381"} size={20} />
+        <Dashboard color={pathname === "/" ? "#792df8" : "#637381"} size={20} />
       ),
       items: [
         {
@@ -23,7 +23,7 @@ const navConfig = ({ pathname }) => {
     {
       title: "Connection Request",
       icon: (
-        <ConnectionRequest color={pathname === "/connection-request" ? "#00AE60" : "#637381"} size={20} />
+        <ConnectionRequest color={pathname === "/connection-request" ? "#792df8" : "#637381"} size={20} />
       ),
       items: [
         {
@@ -40,7 +40,7 @@ const navConfig = ({ pathname }) => {
             pathname.startsWith("/coverage-list") ||
             pathname.startsWith("/add-coverage") ||
             pathname.startsWith("/add-zone")
-              ? "#00AE60"
+              ? "#792df8"
               : "#637381"
           }
           size={20}
@@ -68,7 +68,7 @@ const navConfig = ({ pathname }) => {
           color={
             pathname.startsWith("/package-list") ||
             pathname.startsWith("/add-package")
-              ? "#00AE60"
+              ? "#792df8"
               : "#637381"
           }
           size={20}
@@ -88,7 +88,7 @@ const navConfig = ({ pathname }) => {
     {
       title: "Client",
       icon: (
-        <HappyClient color={pathname === "/client" ? "#00AE60" : "#637381"} size={20} />
+        <HappyClient color={pathname === "/client" ? "#792df8" : "#637381"} size={20} />
       ),
       items: [
         {
@@ -104,7 +104,7 @@ const navConfig = ({ pathname }) => {
     {
       title: "Overview",
       icon: (
-        <Dashboard color={pathname === "/" ? "#00AE60" : "#637381"} size={20} />
+        <Dashboard color={pathname === "/" ? "#792df8" : "#637381"} size={20} />
       ),
       items: [
         {
@@ -121,7 +121,7 @@ const navConfig = ({ pathname }) => {
             pathname.startsWith("/coverage-list") ||
             pathname.startsWith("/add-coverage") ||
             pathname.startsWith("/add-zone")
-              ? "#00AE60"
+              ? "#792df8"
               : "#637381"
           }
           size={20}
@@ -149,7 +149,7 @@ const navConfig = ({ pathname }) => {
           color={
             pathname.startsWith("/package-list") ||
             pathname.startsWith("/add-package")
-              ? "#00AE60"
+              ? "#792df8"
               : "#637381"
           }
           size={20}

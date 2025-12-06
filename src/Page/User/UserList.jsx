@@ -2,7 +2,7 @@ import { Box, Toolbar } from "@mui/material";
 import Sidebar from "../../Layout/Sidebar";
 import AllUserList from "../../Components/User/UserList/AllUserList";
 export default function UserList() {
-  const drawerWidth = 280;
+  const drawerWidth = 260;
 
   return (
     <Box>

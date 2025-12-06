@@ -17,7 +17,7 @@ export default function CustomePopOver({
       slotProps={{
         paper: {
           sx: {
-            width: 180,
+            width: 220,
             p: "4px",
             borderRadius: "8px",
             boxShadow: "-20px 20px 40px -4px rgba(145, 158, 171, 0.24)",

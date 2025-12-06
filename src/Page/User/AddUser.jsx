@@ -2,7 +2,7 @@ import { Box, Toolbar } from "@mui/material";
 import Sidebar from "../../Layout/Sidebar";
 import AddNewUser from "../../Components/User/AddNewUser/AddNewUser";
 export default function AddUser() {
-  const drawerWidth = 280;
+  const drawerWidth = 260;
 
   return (
     <Box>

@@ -3,7 +3,7 @@ import Sidebar from "../../Layout/Sidebar";
 import Add from "../../Components/Coverage/AddCoverage/Add";
 
 export default function AddCoverageArea() {
-  const drawerWidth = 280;
+  const drawerWidth = 260;
   const forBelow1200 = useMediaQuery("(min-width:1200px)");
   return (
     <Box>

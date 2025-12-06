@@ -35,7 +35,7 @@ export default function CustomePagination({
         }}
         sx={{
           borderBottom: "none",
-          borderTop: "1px solid rgba(145, 158, 171, 0.24)",
+          // borderTop: "1px solid rgba(145, 158, 171, 0.24)",
           width: "100%",
         }}
       />

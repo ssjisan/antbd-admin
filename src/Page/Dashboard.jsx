@@ -5,7 +5,7 @@ import WelcomeCard from "../Components/Dashboard/WelcomeCard/WelcomeCard";
 
 
 export default function Dashboard() {
-  const drawerWidth = 280;
+  const drawerWidth = 260;
   const forBelow1200 = useMediaQuery("(min-width:1200px)");
   
   return (

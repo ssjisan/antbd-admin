@@ -2,7 +2,7 @@ import { Box, Toolbar } from "@mui/material";
 import Sidebar from "../../Layout/Sidebar";
 import ChangePasswordForm from "../../Components/User/ChangePasswordForm";
 export default function ChangePassword() {
-  const drawerWidth = 280;
+  const drawerWidth = 260;
 
   return (
     <Box>
