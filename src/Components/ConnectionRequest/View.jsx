@@ -27,8 +27,8 @@ export default function View() {
     { key: "package", label: "Package" },
     // { key: "zone", label: "Zone" },
     // { key: "remarks", label: "Remarks" },
-    { key: "fullAddress", label: "Full Address" },
     { key: "status", label: "Status" },
+    { key: "remarks", label: "Remarks" },
     // { key: "createdAt", label: "Created at" },
   ];
 
@@ -52,7 +52,7 @@ export default function View() {
   // Filter Drawer States
   const [openFilter, setOpenFilter] = useState(false);
   const [filterValues, setFilterValues] = useState({
-    status: "pending", // default pending
+    status: "", // default pending
     package: "",
     zone: "", // default all
     startDate: dayjs().startOf("month").format("YYYY-MM-DD"),
@@ -99,7 +99,7 @@ export default function View() {
   useEffect(() => {
     loadPackages();
     loadCoverageAreas();
-    loadConnectionRequests(filterValues);
+    loadConnectionRequests({});
   }, []);
 
   useEffect(() => {

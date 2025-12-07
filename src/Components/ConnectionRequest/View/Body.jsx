@@ -137,20 +137,14 @@ export default function Body({
                   {data.zone}
                 </TableCell> */}
 
-                <TableCell sx={{ fontSize: "14px", padding: "10px 16px" }}>
-                  <Tooltip title={data.fullAddress}>
-                    <span>{data.fullAddress}</span>
-                  </Tooltip>
-                </TableCell>
-
                 <TableCell
                   sx={{
                     fontSize: "14px",
                     padding: "10px 16px",
                     display: "flex",
                     flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
+                    alignItems: "flex-start",
+                    justifyContent: "flex-start",
                   }}
                 >
                   <Box
@@ -166,7 +160,15 @@ export default function Body({
                     {data.status}
                   </Box>
                 </TableCell>
-
+                <TableCell
+                  sx={{
+                    fontSize: "14px",
+                    padding: "10px 8px",
+                    width: "360px",
+                  }}
+                >
+                  {data.remarks || "No remarks provided"}
+                </TableCell>
                 {/* <TableCell sx={{ fontSize: "14px", padding: "10px 16px" }}>
                   {formatDateTime(data.createdAt)}
                 </TableCell> */}
@@ -219,8 +221,7 @@ export default function Body({
                         {formatDateTime(data.createdAt)}
                       </Typography>
                       <Typography sx={{ gridColumn: "1/-1" }}>
-                        <strong>Remarks:</strong>{" "}
-                        {data.remarks || "No remarks provided"}
+                        <strong>Address:</strong> {data.fullAddress}
                       </Typography>
                     </Stack>
                   </Collapse>
