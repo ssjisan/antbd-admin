@@ -18,6 +18,7 @@ export default function Add() {
   const [setupCharge, setSetupCharge] = useState("");
   const [popUp, setPopUp] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [specialPackages, setSpecialPackages] = useState(false);
 
   useEffect(() => {
     const fetchAreaData = async () => {
@@ -33,7 +34,8 @@ export default function Add() {
         setPrice(data.price || "");
         setSetupCharge(data.setupCharge || "");
         setConnectionType(data.connectionType || []);
-        setPopUp(data.popUp || ""); // Don't prefill file input
+        setPopUp(data.popUp || "");
+        setSpecialPackages(data.specialPackages || false);
       } catch (error) {
         toast.error("Failed to load area for editing.");
       }
@@ -55,6 +57,7 @@ export default function Add() {
         setupCharge: Number(setupCharge),
         connectionType: connectionType.map(Number),
         popUp: Boolean(popUp),
+        specialPackages: Boolean(specialPackages),
       };
 
       const { data } = await axios.post("/create-package", payload);
@@ -97,6 +100,8 @@ export default function Add() {
           setConnectionType={setConnectionType}
           popUp={popUp}
           setPopUp={setPopUp}
+          specialPackages={specialPackages} // ✅ ADD
+          setSpecialPackages={setSpecialPackages} // ✅ ADD
           onSubmit={handleSubmit}
         />
       </Stack>

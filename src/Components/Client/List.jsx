@@ -1,17 +1,10 @@
 import PropTypes from "prop-types";
-import {
-  Stack,
-  Typography,
-  Box,
-  Button,
-  Skeleton,
-} from "@mui/material";
+import { Stack, Typography, Box, Button, Skeleton } from "@mui/material";
 
 export default function List({
   clients,
   isLoading,
   onDeleteClick,
-  setDataToDelete,
   onEditClick,
   setSelectedRowId,
 }) {
@@ -115,8 +108,7 @@ export default function List({
                 variant="contained"
                 color="error"
                 onClick={() => {
-                  onDeleteClick(data);
-                  setDataToDelete(data._id);
+                  onDeleteClick(data); // parent will handle the state
                 }}
               >
                 Delete

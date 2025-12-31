@@ -35,6 +35,8 @@ export default function Form({
   setSetupCharge,
   popUp,
   setPopUp,
+  specialPackages,
+  setSpecialPackages,
   onSubmit,
 }) {
   // Handle changes from Select dropdown (normal multi-select)
@@ -192,6 +194,15 @@ export default function Form({
         }
         label="Show this package on homepage (recommended for featured plans)"
       />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={specialPackages}
+            onChange={(e) => setSpecialPackages(e.target.checked)}
+          />
+        }
+        label="Mark this as a special package (campaign / jubilee / featured)"
+      />
       <Button
         variant="contained"
         color="primary"
@@ -221,4 +232,6 @@ Form.propTypes = {
   popUp: PropTypes.bool.isRequired,
   setPopUp: PropTypes.bool.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  specialPackages: PropTypes.bool.isRequired,
+  setSpecialPackages: PropTypes.func.isRequired,
 };

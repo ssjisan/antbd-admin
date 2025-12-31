@@ -68,13 +68,17 @@ export default function ClientSetup() {
     if (image) formData.append("image", image);
     if (editingId) formData.append("id", editingId);
 
-    const loadingToast = toast.loading(editingId ? "Updating..." : "Uploading...");
+    const loadingToast = toast.loading(
+      editingId ? "Updating..." : "Uploading..."
+    );
 
     try {
       const { data } = await axios.post("/client-handle", formData);
 
       toast.success(
-        editingId ? "Client updated successfully!" : "Client added successfully!",
+        editingId
+          ? "Client updated successfully!"
+          : "Client added successfully!",
         { id: loadingToast }
       );
 
@@ -190,7 +194,6 @@ export default function ClientSetup() {
           selectedRowId={selectedRowId}
           dataToDelete={dataToDelete}
           setDataToDelete={setDataToDelete}
-          setSelectedRowId={setSelectedRowId}
           onDeleteClick={(client) => {
             setDataToDelete(client);
             setIsModalOpen(true);
@@ -201,7 +204,7 @@ export default function ClientSetup() {
         <ConfirmationModal
           open={isModalOpen}
           title="Delete Client"
-          itemName={dataToDelete?.name || ""}
+          itemName={dataToDelete?.name || "Untitled"}
           onClose={() => setIsModalOpen(false)}
           onConfirm={handleRemove}
         />
