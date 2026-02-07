@@ -1,8 +1,7 @@
 import { Box, Stack, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 
-export default function TotalPackage({count}) {
- 
+export default function TotalPackage({ count }) {
   return (
     <Box
       sx={{
@@ -16,8 +15,8 @@ export default function TotalPackage({count}) {
         alignItems: "center",
       }}
     >
-      <Box sx={{width:"64px", height:"64px"}}>
-        <img src="https://res.cloudinary.com/dr0jcn0ds/image/upload/v1753598260/dashboard/kpi/2_re2mrw.webp" style={{width:"100%"}}/>
+      <Box sx={{ width: "64px", height: "64px" }}>
+        <img src="map.png" style={{ width: "100%" }} />
       </Box>
       <Stack>
         <Typography variant="h4">{count}</Typography>

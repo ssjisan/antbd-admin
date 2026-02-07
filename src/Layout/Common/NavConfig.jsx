@@ -1,6 +1,14 @@
 import { DataContext } from "../../DataProcessing/DataProcessing";
 import { useContext } from "react";
-import { Dashboard, Coverage, Package, ConnectionRequest, HappyClient } from "../../assets/IconSet";
+import {
+  Dashboard,
+  Coverage,
+  Package,
+  ConnectionRequest,
+  HappyClient,
+  UpdateContact,
+  Membership,
+} from "../../assets/IconSet";
 
 const navConfig = ({ pathname }) => {
   const { auth } = useContext(DataContext);
@@ -23,7 +31,10 @@ const navConfig = ({ pathname }) => {
     {
       title: "Connection Request",
       icon: (
-        <ConnectionRequest color={pathname === "/connection-request" ? "#792df8" : "#637381"} size={20} />
+        <ConnectionRequest
+          color={pathname === "/connection-request" ? "#792df8" : "#637381"}
+          size={20}
+        />
       ),
       items: [
         {
@@ -88,12 +99,45 @@ const navConfig = ({ pathname }) => {
     {
       title: "Client",
       icon: (
-        <HappyClient color={pathname === "/client" ? "#792df8" : "#637381"} size={20} />
+        <HappyClient
+          color={pathname === "/client" ? "#792df8" : "#637381"}
+          size={20}
+        />
       ),
       items: [
         {
           title: "Client",
           link: "/client",
+        },
+      ],
+    },
+    {
+      title: "Memberships",
+      icon: (
+        <Membership
+          color={pathname === "/membership" ? "#792df8" : "#637381"}
+          size={20}
+        />
+      ),
+      items: [
+        {
+          title: "Membership",
+          link: "/membership",
+        },
+      ],
+    },
+    {
+      title: "Contact",
+      icon: (
+        <UpdateContact
+          color={pathname === "/contact-info" ? "#792df8" : "#637381"}
+          size={20}
+        />
+      ),
+      items: [
+        {
+          title: "Contact info",
+          link: "/contact-info",
         },
       ],
     },

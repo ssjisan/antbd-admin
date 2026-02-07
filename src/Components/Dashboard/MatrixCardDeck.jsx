@@ -33,18 +33,18 @@ export default function MatrixCardDeck() {
   return (
     <Box sx={{ mt: "40px", mb: "40px" }}>
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={6} md={3} lg={3}>
+        <Grid item xs={12} sm={6} md={4} lg={4}>
           <ConnectionRequest count={summary.totalRequests} />
         </Grid>
-        <Grid item xs={12} sm={6} md={3} lg={3}>
+        <Grid item xs={12} sm={6} md={4} lg={4}>
           <TotalPackage count={summary.totalPackages} />
         </Grid>
-        <Grid item xs={12} sm={6} md={3} lg={3}>
+        <Grid item xs={12} sm={6} md={4} lg={4}>
           <TotalArea count={summary.totalAreas} />
         </Grid>
-        <Grid item xs={12} sm={6} md={3} lg={3}>
+        {/* <Grid item xs={12} sm={6} md={3} lg={3}>
           <HighestRequest zone={summary.topZone.zone} count={summary.topZone.count} />
-        </Grid>
+        </Grid> */}
       </Grid>
     </Box>
   );

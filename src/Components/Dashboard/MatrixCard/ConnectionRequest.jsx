@@ -16,10 +16,7 @@ export default function ConnectionRequest({ count }) {
       }}
     >
       <Box sx={{ width: "64px", height: "64px" }}>
-        <img
-          src="https://res.cloudinary.com/dr0jcn0ds/image/upload/v1753597145/dashboard/kpi/request_t5qox0.png"
-          style={{ width: "100%" }}
-        />
+        <img src="map.png" style={{ width: "100%" }} />
       </Box>
       <Stack>
         <Typography variant="h4">{count}</Typography>

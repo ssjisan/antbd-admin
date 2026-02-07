@@ -13,6 +13,8 @@ import AddPackage from "../Page/Package/AddPackage";
 import PackageList from "../Page/Package/PackageList";
 import ConnectionRequest from "../Page/ConnectionRequest";
 import Client from "../Page/Client";
+import ContactInfo from "../Page/ContactInfo";
+import Membership from "../Page/Membership";
 
 export default function MainRouters() {
   return (
@@ -46,6 +48,7 @@ export default function MainRouters() {
         <Route path="" element={<PrivateRoute />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/client" element={<Client />} />
+          <Route path="/membership" element={<Membership />} />
           <Route path="/connection-request" element={<ConnectionRequest />} />
           {/* User Routes Start */}
           <Route path="/create_use" element={<AddUser />} />
@@ -54,16 +57,18 @@ export default function MainRouters() {
           {/* User Routes End */}
 
           {/* Coverage Area Route Start Here */}
-          <Route path="/add-coverage" element={<AddCoverageArea/>}/>
-          <Route path="/edit-coverage/:id" element={<AddCoverageArea/>}/>
-          <Route path="/coverage-list" element={<CoverageAreaList/>}/>
-          <Route path="/add-zone" element={<AddZone/>}/>
+          <Route path="/add-coverage" element={<AddCoverageArea />} />
+          <Route path="/edit-coverage/:id" element={<AddCoverageArea />} />
+          <Route path="/coverage-list" element={<CoverageAreaList />} />
+          <Route path="/add-zone" element={<AddZone />} />
           {/* Coverage Area Route End Here */}
 
           {/* Coverage Area Route Start Here */}
-          <Route path="/package-list" element={<PackageList/>}/>
-          <Route path="/add-package" element={<AddPackage/>}/>
-          <Route path="/edit-package/:id" element={<AddPackage/>}/>
+          <Route path="/package-list" element={<PackageList />} />
+          <Route path="/add-package" element={<AddPackage />} />
+          <Route path="/edit-package/:id" element={<AddPackage />} />
+          <Route path="/contact-info" element={<ContactInfo />} />
+
           {/* Coverage Area Route End Here */}
         </Route>
         {/* <Route path="*" element={<ErrorPage />} replace /> */}

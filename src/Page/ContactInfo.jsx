@@ -1,8 +1,8 @@
-import { Box, Toolbar, useMediaQuery } from "@mui/material";
-import Sidebar from "../../Layout/Sidebar";
-import Add from "../../Components/Package/AddPackage/Add";
+import { Box, Toolbar, Typography, useMediaQuery } from "@mui/material";
+import Sidebar from "../Layout/Sidebar";
+import ContactInfoForm from "../Components/ContactInfoForm/ContactInfoForm";
 
-export default function AddPackage() {
+export default function ContactInfo() {
   const drawerWidth = 260;
   const forBelow1200 = useMediaQuery("(min-width:1200px)");
   return (
@@ -17,7 +17,10 @@ export default function AddPackage() {
         }}
       >
         <Toolbar />
-        <Add />
+        <Box>
+          <Typography variant="h5">Contact Info&apos;s</Typography>
+          <ContactInfoForm />
+        </Box>
       </Box>
     </Box>
   );

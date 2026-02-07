@@ -1,10 +1,11 @@
 import { Box, Toolbar, useMediaQuery } from "@mui/material";
-import Sidebar from "../../Layout/Sidebar";
-import Add from "../../Components/Package/AddPackage/Add";
+import Sidebar from "../Layout/Sidebar";
+import MembershipSetup from "../Components/Membership/MembershipSetup";
 
-export default function AddPackage() {
+export default function Membership() {
   const drawerWidth = 260;
   const forBelow1200 = useMediaQuery("(min-width:1200px)");
+
   return (
     <Box>
       <Sidebar />
@@ -17,7 +18,9 @@ export default function AddPackage() {
         }}
       >
         <Toolbar />
-        <Add />
+        <Box>
+          <MembershipSetup />
+        </Box>
       </Box>
     </Box>
   );
