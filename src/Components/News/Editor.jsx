@@ -62,6 +62,32 @@ const isMarkActive = (editor, format) => {
   return marks ? marks[format] === true : false;
 };
 
+const toggleAlign = (editor, format) => {
+  const isActive = isAlignActive(editor, format);
+
+  // If it's already active, we remove the alignment (defaulting to left)
+  // otherwise, we set it to the new format
+  Transforms.setNodes(
+    editor,
+    { align: isActive ? undefined : format },
+    { match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n) },
+  );
+};
+
+const isAlignActive = (editor, format) => {
+  const { selection } = editor;
+  if (!selection) return false;
+
+  const [match] = Array.from(
+    Editor.nodes(editor, {
+      at: Editor.unhangRange(editor, selection),
+      match: (n) =>
+        !Editor.isEditor(n) && SlateElement.isElement(n) && n.align === format,
+    }),
+  );
+  return !!match;
+};
+
 // --- 2. Updated Serializer ---
 
 const escapeHtml = (str) => {
@@ -79,25 +105,25 @@ const serialize = (node) => {
   }
 
   const children = node.children.map((n) => serialize(n)).join("");
-
+  const alignStyle = node.align ? ` style="text-align: ${node.align};"` : "";
   switch (node.type) {
     case "paragraph":
       if (children === "") {
         return "<br />";
       }
-      return `<p>${children}</p>`;
+      return `<p${alignStyle}>${children}</p>`;
     case "heading-one":
-      return `<h1>${children}</h1>`;
+      return `<h1${alignStyle}>${children}</h1>`;
     case "heading-two":
-      return `<h2>${children}</h2>`;
+      return `<h2${alignStyle}>${children}</h2>`;
     case "heading-three":
-      return `<h3>${children}</h3>`;
+      return `<h3${alignStyle}>${children}</h3>`;
     case "heading-four":
-      return `<h4>${children}</h4>`;
+      return `<h4${alignStyle}>${children}</h4>`;
     case "heading-five":
-      return `<h5>${children}</h5>`;
+      return `<h5${alignStyle}>${children}</h5>`;
     case "heading-six":
-      return `<h6>${children}</h6>`;
+      return `<h6${alignStyle}>${children}</h6>`;
     case "block-quote":
       return `<blockquote>${children}</blockquote>`;
     case "break":
@@ -240,6 +266,40 @@ export default function MyEditor() {
           >
             Quote
           </button>
+          <span style={{ borderLeft: "1px solid #ccc", margin: "0 8px" }} />
+
+          <button
+            onMouseDown={(e) => {
+              e.preventDefault();
+              toggleAlign(editor, "left");
+            }}
+          >
+            Left
+          </button>
+          <button
+            onMouseDown={(e) => {
+              e.preventDefault();
+              toggleAlign(editor, "center");
+            }}
+          >
+            Center
+          </button>
+          <button
+            onMouseDown={(e) => {
+              e.preventDefault();
+              toggleAlign(editor, "right");
+            }}
+          >
+            Right
+          </button>
+          <button
+            onMouseDown={(e) => {
+              e.preventDefault();
+              toggleAlign(editor, "justify");
+            }}
+          >
+            Justify
+          </button>
         </div>
 
         <Editable
@@ -267,52 +327,56 @@ export default function MyEditor() {
           )}
           // This tells Slate how to render the blocks visually in the editor
           renderElement={useCallback(({ attributes, children, element }) => {
+            const combinedStyle = {
+              ...elementStyle,
+              textAlign: element.align || "left",
+            };
             switch (element.type) {
               case "block-quote":
                 return (
-                  <blockquote style={elementStyle} {...attributes}>
+                  <blockquote style={combinedStyle} {...attributes}>
                     {children}
                   </blockquote>
                 );
               case "heading-one":
                 return (
-                  <h1 style={elementStyle} {...attributes}>
+                  <h1 style={combinedStyle} {...attributes}>
                     {children}
                   </h1>
                 );
               case "heading-two":
                 return (
-                  <h2 style={elementStyle} {...attributes}>
+                  <h2 style={combinedStyle} {...attributes}>
                     {children}
                   </h2>
                 );
               case "heading-three":
                 return (
-                  <h3 style={elementStyle} {...attributes}>
+                  <h3 style={combinedStyle} {...attributes}>
                     {children}
                   </h3>
                 );
               case "heading-four":
                 return (
-                  <h4 style={elementStyle} {...attributes}>
+                  <h4 style={combinedStyle} {...attributes}>
                     {children}
                   </h4>
                 );
               case "heading-five":
                 return (
-                  <h5 style={elementStyle} {...attributes}>
+                  <h5 style={combinedStyle} {...attributes}>
                     {children}
                   </h5>
                 );
               case "heading-six":
                 return (
-                  <h6 style={elementStyle} {...attributes}>
+                  <h6 style={combinedStyle} {...attributes}>
                     {children}
                   </h6>
                 );
               default:
                 return (
-                  <p style={elementStyle} {...attributes}>
+                  <p style={combinedStyle} {...attributes}>
                     {children}
                   </p>
                 );
