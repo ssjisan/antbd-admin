@@ -8,7 +8,111 @@ import {
 } from "slate";
 import { Slate, Editable, withReact } from "slate-react";
 import { withHistory } from "slate-history";
+import EditorToolbar from "./EditorToolbar";
 
+import { useSelected, useFocused, ReactEditor } from "slate-react";
+
+const ImageElement = ({ attributes, children, element, editor }) => {
+  const selected = useSelected();
+  const focused = useFocused();
+
+  const removeImage = () => {
+    // Find the specific path of this image element to delete it
+    const path = ReactEditor.findPath(editor, element);
+    Transforms.removeNodes(editor, { at: path });
+  };
+
+  return (
+    <div {...attributes}>
+      <div
+        contentEditable={false}
+        style={{
+          position: "relative",
+          textAlign: element.align || "left",
+          userSelect: "none",
+        }}
+      >
+        <div style={{ display: "inline-block", position: "relative" }}>
+          <img
+            src={element.url}
+            alt=""
+            style={{
+              display: "block",
+              maxWidth: "100%",
+              width: element.width || "auto",
+              height: "auto",
+              boxShadow: selected && focused ? "0 0 0 3px #B4D5FF" : "none",
+            }}
+          />
+
+          {/* REMOVE BUTTON */}
+          {selected && focused && (
+            <button
+              onMouseDown={(e) => {
+                e.preventDefault(); // Important: prevents losing focus
+                removeImage();
+              }}
+              style={{
+                position: "absolute",
+                top: "5px",
+                left: "5px",
+                background: "white",
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+                cursor: "pointer",
+                padding: "2px 8px",
+                zIndex: 10,
+              }}
+            >
+              Delete
+            </button>
+          )}
+
+          {/* RESIZE HANDLE */}
+          {selected && focused && (
+            <div
+              onMouseDown={(e) => {
+                e.preventDefault();
+                const startX = e.clientX;
+                const imgElement = e.target.parentElement.querySelector("img");
+                const startWidth = imgElement.offsetWidth;
+
+                const onMouseMove = (moveEvent) => {
+                  const newWidth = startWidth + (moveEvent.clientX - startX);
+                  const path = ReactEditor.findPath(editor, element);
+                  Transforms.setNodes(
+                    editor,
+                    { width: newWidth },
+                    { at: path },
+                  );
+                };
+
+                const onMouseUp = () => {
+                  document.removeEventListener("mousemove", onMouseMove);
+                  document.removeEventListener("mouseup", onMouseUp);
+                };
+
+                document.addEventListener("mousemove", onMouseMove);
+                document.addEventListener("mouseup", onMouseUp);
+              }}
+              style={{
+                position: "absolute",
+                bottom: "0",
+                right: "0",
+                width: "12px",
+                height: "12px",
+                background: "#4A90E2",
+                cursor: "nwse-resize",
+                border: "1px solid white",
+              }}
+            />
+          )}
+        </div>
+      </div>
+      {children}
+    </div>
+  );
+};
 // --- 1. Helper Functions for Formatting ---
 
 const toggleBlock = (editor, format) => {
@@ -88,6 +192,27 @@ const isAlignActive = (editor, format) => {
   return !!match;
 };
 
+// Add this to your helper functions
+const insertImage = (editor, url) => {
+  const text = { text: "" };
+  const image = { type: "image", url, children: [text] };
+  Transforms.insertNodes(editor, image);
+  // Add an empty paragraph after the image so the user can keep typing
+  Transforms.insertNodes(editor, {
+    type: "paragraph",
+    children: [{ text: "" }],
+  });
+};
+
+// This "plugin" is essential: it tells Slate not to treat the image as text
+const withImages = (editor) => {
+  const { isVoid } = editor;
+  editor.isVoid = (element) => {
+    return element.type === "image" ? true : isVoid(element);
+  };
+  return editor;
+};
+
 // --- 2. Updated Serializer ---
 
 const escapeHtml = (str) => {
@@ -106,6 +231,10 @@ const serialize = (node) => {
 
   const children = node.children.map((n) => serialize(n)).join("");
   const alignStyle = node.align ? ` style="text-align: ${node.align};"` : "";
+  const imgWidth = node.width ? `width: ${node.width}px;` : "max-width: 100%;";
+  const imgAlign = node.align
+    ? `text-align: ${node.align};`
+    : "text-align: left;";
   switch (node.type) {
     case "paragraph":
       if (children === "") {
@@ -128,6 +257,10 @@ const serialize = (node) => {
       return `<blockquote>${children}</blockquote>`;
     case "break":
       return `<br />`;
+    case "image":
+      return `<div style="${imgAlign} margin: 10px 0;">
+            <img src="${node.url}" style="${imgWidth} height: auto;" />
+          </div>`;
     default:
       return children;
   }
@@ -136,7 +269,10 @@ const serialize = (node) => {
 // --- 3. Main Component ---
 
 export default function MyEditor() {
-  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+  const editor = useMemo(
+    () => withImages(withHistory(withReact(createEditor()))),
+    [],
+  );
   const [value, setValue] = useState([
     { type: "paragraph", children: [{ text: "" }] },
   ]);
@@ -170,138 +306,14 @@ export default function MyEditor() {
       }}
     >
       <Slate editor={editor} initialValue={value} onChange={setValue}>
-        {/* TOOLBAR */}
-        <div
-          style={{
-            marginBottom: "10px",
-            borderBottom: "1px solid #ccc",
-            paddingBottom: "10px",
-            display: "flex",
-            gap: "5px",
-            flexWrap: "wrap",
-          }}
-        >
-          {/* Marks */}
-          <button
-            onMouseDown={(e) => {
-              e.preventDefault();
-              toggleMark(editor, "bold");
-            }}
-          >
-            <b>B</b>
-          </button>
-          <button
-            onMouseDown={(e) => {
-              e.preventDefault();
-              toggleMark(editor, "italic");
-            }}
-          >
-            <i>I</i>
-          </button>
-          <button
-            onMouseDown={(e) => {
-              e.preventDefault();
-              toggleMark(editor, "underline");
-            }}
-          >
-            <u>U</u>
-          </button>
-
-          <span style={{ borderLeft: "1px solid #ccc", margin: "0 8px" }} />
-
-          {/* Blocks */}
-          <button
-            onMouseDown={(e) => {
-              e.preventDefault();
-              toggleBlock(editor, "heading-one");
-            }}
-          >
-            H1
-          </button>
-          <button
-            onMouseDown={(e) => {
-              e.preventDefault();
-              toggleBlock(editor, "heading-two");
-            }}
-          >
-            H2
-          </button>
-          <button
-            onMouseDown={(e) => {
-              e.preventDefault();
-              toggleBlock(editor, "heading-three");
-            }}
-          >
-            H3
-          </button>
-          <button
-            onMouseDown={(e) => {
-              e.preventDefault();
-              toggleBlock(editor, "heading-four");
-            }}
-          >
-            H4
-          </button>
-          <button
-            onMouseDown={(e) => {
-              e.preventDefault();
-              toggleBlock(editor, "heading-five");
-            }}
-          >
-            H5
-          </button>
-          <button
-            onMouseDown={(e) => {
-              e.preventDefault();
-              toggleBlock(editor, "heading-six");
-            }}
-          >
-            H6
-          </button>
-          <button
-            onMouseDown={(e) => {
-              e.preventDefault();
-              toggleBlock(editor, "block-quote");
-            }}
-          >
-            Quote
-          </button>
-          <span style={{ borderLeft: "1px solid #ccc", margin: "0 8px" }} />
-
-          <button
-            onMouseDown={(e) => {
-              e.preventDefault();
-              toggleAlign(editor, "left");
-            }}
-          >
-            Left
-          </button>
-          <button
-            onMouseDown={(e) => {
-              e.preventDefault();
-              toggleAlign(editor, "center");
-            }}
-          >
-            Center
-          </button>
-          <button
-            onMouseDown={(e) => {
-              e.preventDefault();
-              toggleAlign(editor, "right");
-            }}
-          >
-            Right
-          </button>
-          <button
-            onMouseDown={(e) => {
-              e.preventDefault();
-              toggleAlign(editor, "justify");
-            }}
-          >
-            Justify
-          </button>
-        </div>
-
+        {/* Tool */}
+        <EditorToolbar
+          toggleMark={toggleMark}
+          toggleBlock={toggleBlock}
+          editor={editor}
+          toggleAlign={toggleAlign}
+          insertImage={insertImage}
+        />
         <Editable
           placeholder="Type something..."
           onKeyDown={onKeyDown}
@@ -326,62 +338,74 @@ export default function MyEditor() {
             </div>
           )}
           // This tells Slate how to render the blocks visually in the editor
-          renderElement={useCallback(({ attributes, children, element }) => {
-            const combinedStyle = {
-              ...elementStyle,
-              textAlign: element.align || "left",
-            };
-            switch (element.type) {
-              case "block-quote":
-                return (
-                  <blockquote style={combinedStyle} {...attributes}>
-                    {children}
-                  </blockquote>
-                );
-              case "heading-one":
-                return (
-                  <h1 style={combinedStyle} {...attributes}>
-                    {children}
-                  </h1>
-                );
-              case "heading-two":
-                return (
-                  <h2 style={combinedStyle} {...attributes}>
-                    {children}
-                  </h2>
-                );
-              case "heading-three":
-                return (
-                  <h3 style={combinedStyle} {...attributes}>
-                    {children}
-                  </h3>
-                );
-              case "heading-four":
-                return (
-                  <h4 style={combinedStyle} {...attributes}>
-                    {children}
-                  </h4>
-                );
-              case "heading-five":
-                return (
-                  <h5 style={combinedStyle} {...attributes}>
-                    {children}
-                  </h5>
-                );
-              case "heading-six":
-                return (
-                  <h6 style={combinedStyle} {...attributes}>
-                    {children}
-                  </h6>
-                );
-              default:
-                return (
-                  <p style={combinedStyle} {...attributes}>
-                    {children}
-                  </p>
-                );
-            }
-          }, [])}
+          // This tells Slate how to render the blocks visually in the editor
+          renderElement={useCallback(
+            (props) => {
+              const { attributes, children, element } = props; // Define variables from props
+
+              const combinedStyle = {
+                ...elementStyle,
+                textAlign: element.align || "left",
+              };
+
+              switch (element.type) {
+                case "block-quote":
+                  return (
+                    <blockquote style={combinedStyle} {...attributes}>
+                      {children}
+                    </blockquote>
+                  );
+                case "heading-one":
+                  return (
+                    <h1 style={combinedStyle} {...attributes}>
+                      {children}
+                    </h1>
+                  );
+                case "heading-two":
+                  return (
+                    <h2 style={combinedStyle} {...attributes}>
+                      {children}
+                    </h2>
+                  );
+                case "heading-three":
+                  return (
+                    <h3 style={combinedStyle} {...attributes}>
+                      {children}
+                    </h3>
+                  );
+                case "heading-four":
+                  return (
+                    <h4 style={combinedStyle} {...attributes}>
+                      {children}
+                    </h4>
+                  );
+                case "heading-five":
+                  return (
+                    <h5 style={combinedStyle} {...attributes}>
+                      {children}
+                    </h5>
+                  );
+                case "heading-six":
+                  return (
+                    <h6 style={combinedStyle} {...attributes}>
+                      {children}
+                    </h6>
+                  );
+
+                case "image":
+                  // Now 'props' is defined and passed correctly
+                  return <ImageElement {...props} editor={editor} />;
+
+                default:
+                  return (
+                    <p style={combinedStyle} {...attributes}>
+                      {children}
+                    </p>
+                  );
+              }
+            },
+            [editor],
+          )} // Added editor to dependencies so ImageElement gets the right instance
           // This tells Slate how to render Bold/Italic/Underline visually
           renderLeaf={useCallback(({ attributes, children, leaf }) => {
             if (leaf.bold) children = <strong>{children}</strong>;
