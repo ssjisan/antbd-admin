@@ -8,6 +8,7 @@ import {
   HappyClient,
   UpdateContact,
   Membership,
+  Blog,
 } from "../../assets/IconSet";
 
 const navConfig = ({ pathname }) => {
@@ -93,6 +94,30 @@ const navConfig = ({ pathname }) => {
         {
           title: "Package List",
           link: "/package-list",
+        },
+      ],
+    },
+    {
+      title: "News",
+      icon: (
+        <Blog
+          color={
+            pathname.startsWith("/news-editor") ||
+            pathname.startsWith("/news-list")
+              ? "#792df8"
+              : "#637381"
+          }
+          size={20}
+        />
+      ),
+      items: [
+        {
+          title: "News Editor",
+          link: "/news-editor",
+        },
+        {
+          title: "News List",
+          link: "/news-list",
         },
       ],
     },

@@ -15,6 +15,7 @@ import ConnectionRequest from "../Page/ConnectionRequest";
 import Client from "../Page/Client";
 import ContactInfo from "../Page/ContactInfo";
 import Membership from "../Page/Membership";
+import NewsEditor from "../Page/News/NewsEditor";
 
 export default function MainRouters() {
   return (
@@ -50,6 +51,8 @@ export default function MainRouters() {
           <Route path="/client" element={<Client />} />
           <Route path="/membership" element={<Membership />} />
           <Route path="/connection-request" element={<ConnectionRequest />} />
+          <Route path="/news-editor" element={<NewsEditor />} />
+
           {/* User Routes Start */}
           <Route path="/create_use" element={<AddUser />} />
           <Route path="change_password" element={<ChangePassword />} />
