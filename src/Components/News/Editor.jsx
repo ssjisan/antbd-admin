@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+
 import { useMemo, useState, useCallback } from "react";
 import {
   createEditor,
@@ -261,6 +263,14 @@ const serialize = (node) => {
       return `<div style="${imgAlign} margin: 10px 0;">
             <img src="${node.url}" style="${imgWidth} height: auto;" />
           </div>`;
+    case "numbered-list":
+      return `<ol${alignStyle}>${children}</ol>`;
+
+    case "bulleted-list":
+      return `<ul${alignStyle}>${children}</ul>`;
+
+    case "list-item":
+      return `<li>${children}</li>`;
     default:
       return children;
   }
@@ -276,7 +286,9 @@ export default function MyEditor() {
   const [value, setValue] = useState([
     { type: "paragraph", children: [{ text: "" }] },
   ]);
+  const [, forceRender] = useState({});
 
+  // eslint-disable-next-line
   const htmlOutput = useMemo(
     () => value.map((node) => serialize(node)).join(""),
     [value],
@@ -299,13 +311,20 @@ export default function MyEditor() {
   return (
     <div
       style={{
-        padding: "20px",
         maxWidth: "900px",
-        margin: "0 auto",
-        fontFamily: "sans-serif",
+        width: "100%",
+        borderRadius: "12px 12px 0px 0px",
+        overflow: "hidden",
       }}
     >
-      <Slate editor={editor} initialValue={value} onChange={setValue}>
+      <Slate
+        editor={editor}
+        initialValue={value}
+        onChange={(newValue) => {
+          setValue(newValue);
+          forceRender({});
+        }}
+      >
         {/* Tool */}
         <EditorToolbar
           toggleMark={toggleMark}
@@ -324,7 +343,7 @@ export default function MyEditor() {
             minHeight: "200px",
             lineHeight: "1.2",
             padding: "10px",
-            border: "1px solid #eee",
+            background: "#f6f7f8",
           }}
           renderPlaceholder={({ attributes, children }) => (
             <div
@@ -352,10 +371,22 @@ export default function MyEditor() {
               switch (element.type) {
                 case "block-quote":
                   return (
-                    <blockquote style={combinedStyle} {...attributes}>
+                    <blockquote
+                      {...attributes}
+                      style={{
+                        ...combinedStyle,
+                        borderLeft: "4px solid #4A90E2",
+                        background: "#f7f9fc",
+                        padding: "10px 14px",
+                        margin: "12px 0",
+                        fontStyle: "italic",
+                        color: "#444",
+                      }}
+                    >
                       {children}
                     </blockquote>
                   );
+
                 case "heading-one":
                   return (
                     <h1 style={combinedStyle} {...attributes}>
@@ -396,7 +427,22 @@ export default function MyEditor() {
                 case "image":
                   // Now 'props' is defined and passed correctly
                   return <ImageElement {...props} editor={editor} />;
+                case "numbered-list":
+                  return (
+                    <ol style={combinedStyle} {...attributes}>
+                      {children}
+                    </ol>
+                  );
 
+                case "bulleted-list":
+                  return (
+                    <ul style={combinedStyle} {...attributes}>
+                      {children}
+                    </ul>
+                  );
+
+                case "list-item":
+                  return <li {...attributes}>{children}</li>;
                 default:
                   return (
                     <p style={combinedStyle} {...attributes}>
@@ -406,8 +452,7 @@ export default function MyEditor() {
               }
             },
             [editor],
-          )} // Added editor to dependencies so ImageElement gets the right instance
-          // This tells Slate how to render Bold/Italic/Underline visually
+          )}
           renderLeaf={useCallback(({ attributes, children, leaf }) => {
             if (leaf.bold) children = <strong>{children}</strong>;
             if (leaf.italic) children = <em>{children}</em>;
@@ -421,7 +466,7 @@ export default function MyEditor() {
         />
       </Slate>
 
-      <div style={{ marginTop: "40px" }}>
+      {/* <div style={{ marginTop: "40px" }}>
         <h3>HTML Output:</h3>
         <textarea
           readOnly
@@ -432,7 +477,7 @@ export default function MyEditor() {
           className="mt-2 p-4 border rounded bg-gray-50"
           dangerouslySetInnerHTML={{ __html: htmlOutput }}
         />
-      </div>
+      </div> */}
     </div>
   );
 }
