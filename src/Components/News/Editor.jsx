@@ -9,7 +9,7 @@ import {
 import { Slate, Editable, withReact } from "slate-react";
 import { withHistory } from "slate-history";
 import EditorToolbar from "./EditorToolbar";
-
+import PropTypes from "prop-types";
 import { useSelected, useFocused, ReactEditor } from "slate-react";
 
 const ImageElement = ({ attributes, children, element, editor }) => {
@@ -313,6 +313,9 @@ export default function MyEditor() {
           editor={editor}
           toggleAlign={toggleAlign}
           insertImage={insertImage}
+          isMarkActive={isMarkActive}
+          isBlockActive={isBlockActive}
+          isAlignActive={isAlignActive}
         />
         <Editable
           placeholder="Type something..."
@@ -337,11 +340,9 @@ export default function MyEditor() {
               {children}
             </div>
           )}
-          // This tells Slate how to render the blocks visually in the editor
-          // This tells Slate how to render the blocks visually in the editor
           renderElement={useCallback(
             (props) => {
-              const { attributes, children, element } = props; // Define variables from props
+              const { attributes, children, element } = props;
 
               const combinedStyle = {
                 ...elementStyle,
@@ -435,3 +436,10 @@ export default function MyEditor() {
     </div>
   );
 }
+
+ImageElement.propTypes = {
+  attributes: PropTypes.object,
+  children: PropTypes.node,
+  element: PropTypes.object,
+  editor: PropTypes.object,
+};
