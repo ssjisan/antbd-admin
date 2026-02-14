@@ -41,7 +41,7 @@ export default function EditorToolbar({
   toggleBlock,
   editor,
   toggleAlign,
-  insertImage,
+  handleImageUpload,
   isMarkActive,
   isBlockActive,
   isAlignActive,
@@ -219,18 +219,12 @@ export default function EditorToolbar({
             type="file"
             accept="image/*"
             style={{ display: "none" }}
-            onChange={(e) => {
+            onChange={async (e) => {
               const file = e.target.files[0];
               if (file) {
-                const reader = new FileReader();
-                reader.onload = () => {
-                  const url = reader.result;
-                  insertImage(editor, url);
-                };
-                reader.readAsDataURL(file);
+                await handleImageUpload(file); // uploads to server and inserts image
               }
-              // Reset input so the same image can be uploaded again if deleted
-              e.target.value = "";
+              e.target.value = ""; // reset input
             }}
           />
         </IconButton>
@@ -242,7 +236,7 @@ EditorToolbar.propTypes = {
   toggleMark: PropTypes.func.isRequired,
   toggleBlock: PropTypes.func.isRequired,
   toggleAlign: PropTypes.func.isRequired,
-  insertImage: PropTypes.func.isRequired,
+  handleImageUpload: PropTypes.func.isRequired,
   editor: PropTypes.object.isRequired,
   isMarkActive: PropTypes.func.isRequired,
   isBlockActive: PropTypes.func.isRequired,

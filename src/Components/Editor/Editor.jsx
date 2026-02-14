@@ -13,15 +13,19 @@ import { withHistory } from "slate-history";
 import EditorToolbar from "./EditorToolbar";
 import PropTypes from "prop-types";
 import { useSelected, useFocused, ReactEditor } from "slate-react";
+import axios from "axios";
 
 const ImageElement = ({ attributes, children, element, editor }) => {
   const selected = useSelected();
   const focused = useFocused();
-
+  const removeTempImage = async (filename) => {
+    await axios.delete(`/editor-image/${filename}`);
+  };
   const removeImage = () => {
     // Find the specific path of this image element to delete it
     const path = ReactEditor.findPath(editor, element);
     Transforms.removeNodes(editor, { at: path });
+    removeTempImage(element.filename);
   };
 
   return (
@@ -196,10 +200,12 @@ const isAlignActive = (editor, format) => {
 
 // Add this to your helper functions
 const insertImage = (editor, url) => {
-  const text = { text: "" };
-  const image = { type: "image", url, children: [text] };
+  const image = { type: "image", url, children: [{ text: "" }] };
+
+  // Insert the image node
   Transforms.insertNodes(editor, image);
-  // Add an empty paragraph after the image so the user can keep typing
+
+  // Insert an empty paragraph after image so user can continue typing
   Transforms.insertNodes(editor, {
     type: "paragraph",
     children: [{ text: "" }],
@@ -278,20 +284,52 @@ const serialize = (node) => {
 
 // --- 3. Main Component ---
 
-export default function MyEditor() {
+export default function MyEditor({
+  value: propValue,
+  onChangeValue,
+  uploadedImages,
+  setUploadedImages,
+}) {
   const editor = useMemo(
     () => withImages(withHistory(withReact(createEditor()))),
     [],
   );
-  const [value, setValue] = useState([
-    { type: "paragraph", children: [{ text: "" }] },
-  ]);
-  const [, forceRender] = useState({});
+  const [editorValue, setEditorValue] = useState(
+    propValue || [{ type: "paragraph", children: [{ text: "" }] }],
+  );
 
+  const [, forceRender] = useState({});
+  const handleImageUpload = async (file) => {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const res = await axios.post("/editor-image", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      const { url, filename } = res.data;
+
+      insertImage(editor, url);
+
+      // Save filename for cleanup later
+      setUploadedImages((prev) => [...prev, filename]);
+    } catch (error) {
+      console.error("Image upload failed:", error);
+
+      if (error.response) {
+        alert(error.response.data.message || "Image upload failed");
+      } else {
+        alert("Server not responding");
+      }
+    }
+  };
   // eslint-disable-next-line
   const htmlOutput = useMemo(
-    () => value.map((node) => serialize(node)).join(""),
-    [value],
+    () => editorValue.map((node) => serialize(node)).join(""),
+    [editorValue],
   );
   const elementStyle = {
     margin: "0 0 10px 0", // Bottom margin only for spacing between blocks
@@ -319,10 +357,14 @@ export default function MyEditor() {
     >
       <Slate
         editor={editor}
-        initialValue={value}
+        initialValue={editorValue}
         onChange={(newValue) => {
-          setValue(newValue);
+          setEditorValue(newValue);
           forceRender({});
+          if (onChangeValue) {
+            const html = newValue.map((node) => serialize(node)).join(""); // fresh HTML
+            onChangeValue(newValue, html);
+          }
         }}
       >
         {/* Tool */}
@@ -331,7 +373,7 @@ export default function MyEditor() {
           toggleBlock={toggleBlock}
           editor={editor}
           toggleAlign={toggleAlign}
-          insertImage={insertImage}
+          handleImageUpload={handleImageUpload}
           isMarkActive={isMarkActive}
           isBlockActive={isBlockActive}
           isAlignActive={isAlignActive}
@@ -468,11 +510,7 @@ export default function MyEditor() {
 
       {/* <div style={{ marginTop: "40px" }}>
         <h3>HTML Output:</h3>
-        <textarea
-          readOnly
-          value={htmlOutput}
-          style={{ width: "100%", height: "100px", background: "#f5f5f5" }}
-        />
+        {htmlOutput}
         <div
           className="mt-2 p-4 border rounded bg-gray-50"
           dangerouslySetInnerHTML={{ __html: htmlOutput }}
