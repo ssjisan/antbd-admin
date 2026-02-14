@@ -199,13 +199,15 @@ const isAlignActive = (editor, format) => {
 };
 
 // Add this to your helper functions
-const insertImage = (editor, url) => {
-  const image = { type: "image", url, children: [{ text: "" }] };
+const insertImage = (editor, url, filename) => {
+  const image = {
+    type: "image",
+    url,
+    filename,
+    children: [{ text: "" }],
+  };
 
-  // Insert the image node
   Transforms.insertNodes(editor, image);
-
-  // Insert an empty paragraph after image so user can continue typing
   Transforms.insertNodes(editor, {
     type: "paragraph",
     children: [{ text: "" }],
@@ -312,7 +314,7 @@ export default function MyEditor({
 
       const { url, filename } = res.data;
 
-      insertImage(editor, url);
+      insertImage(editor, url, filename);
 
       // Save filename for cleanup later
       setUploadedImages((prev) => [...prev, filename]);
