@@ -26,8 +26,11 @@ export default function NewsPreviewPart() {
 
     if (id) fetchNews();
   }, [id]);
-  console.log(news);
+  const date = new Date(news?.createdAt);
 
+  const formattedDate = `${date.getDate().toString().padStart(2, "0")} 
+${date.toLocaleString("en-GB", { month: "short" })}, 
+${date.getFullYear()}`;
   if (loading) return <Box>Loading...</Box>;
 
   if (!news) return <Box>No Data Found</Box>;
@@ -35,11 +38,23 @@ export default function NewsPreviewPart() {
   return (
     <Box style={{ maxWidth: "900px", margin: "40px auto" }}>
       <Button onClick={() => navigate(-1)}>Back</Button>
-      <img src={news.coverPhoto} />
+      <Box
+        sx={{
+          width: "100%",
+          height: "380px",
+          borderRadius: "16px",
+          overflow: "hidden",
+        }}
+      >
+        <img
+          src={news.coverPhoto}
+          style={{ objectFit: "cover", width: "100%" }}
+        />
+      </Box>
       <Typography variant="h3" sx={{ mb: "24px" }}>
         {news.title}
       </Typography>
-
+      <Typography variant="body">Published on {formattedDate}</Typography>
       <NewsContentRenderer html={news.contentHTML} />
     </Box>
   );

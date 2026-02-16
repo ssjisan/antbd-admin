@@ -51,20 +51,43 @@ export default function NewsEditorPage() {
     const fetchSingleNews = async () => {
       try {
         const res = await axios.get(`/news/${id}`);
-
         const data = res.data;
 
         setTitle(data.title || "");
-        setEditorValue(data.contentJSON || []);
+
+        let initialJSON = data.contentJSON;
+        if (typeof initialJSON === "string") {
+          try {
+            initialJSON = JSON.parse(initialJSON);
+          } catch (e) {
+            console.error("Failed to parse contentJSON string", e);
+          }
+        }
+
+        if (Array.isArray(initialJSON) && typeof initialJSON[0] === "string") {
+          initialJSON = JSON.parse(initialJSON[0]);
+        }
+
+        if (
+          !initialJSON ||
+          !Array.isArray(initialJSON) ||
+          initialJSON.length === 0
+        ) {
+          initialJSON = [{ type: "paragraph", children: [{ text: "" }] }];
+        }
+
+        setEditorValue(initialJSON);
         setHtmlOutput(data.contentHTML || "");
         setUploadedImages(data.uploadedImages || []);
+
         if (data.coverPhoto) {
-          setCoverPreview(data.coverPhoto); // URL from DB
-          setCoverFile(null); // no new file selected yet
+          setCoverPreview(data.coverPhoto);
+          setCoverFile(null);
         }
-        // 🔥 force editor re-render with loaded value
+
         setEditorKey((prev) => prev + 1);
       } catch (error) {
+        console.error(error);
         toast.error("Failed to load article");
       }
     };

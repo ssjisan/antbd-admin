@@ -239,12 +239,15 @@ const serialize = (node) => {
     return string;
   }
 
-  const children = node.children.map((n) => serialize(n)).join("");
+  const children = Array.isArray(node.children)
+    ? node.children.map((n) => serialize(n)).join("")
+    : "";
   const alignStyle = node.align ? ` style="text-align: ${node.align};"` : "";
   const imgWidth = node.width ? `width: ${node.width}px;` : "max-width: 100%;";
   const imgAlign = node.align
     ? `text-align: ${node.align};`
     : "text-align: left;";
+
   switch (node.type) {
     case "paragraph":
       if (children === "") {
