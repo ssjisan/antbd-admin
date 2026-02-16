@@ -16,6 +16,8 @@ import Client from "../Page/Client";
 import ContactInfo from "../Page/ContactInfo";
 import Membership from "../Page/Membership";
 import NewsEditor from "../Page/News/NewsEditor";
+import NewsList from "../Page/News/NewsList";
+import NewsPreview from "../Page/News/NewsPreview";
 
 export default function MainRouters() {
   return (
@@ -52,7 +54,9 @@ export default function MainRouters() {
           <Route path="/membership" element={<Membership />} />
           <Route path="/connection-request" element={<ConnectionRequest />} />
           <Route path="/news-editor" element={<NewsEditor />} />
-
+          <Route path="/news-editor/:id" element={<NewsEditor />} />
+          <Route path="/news-list" element={<NewsList />} />
+          <Route path="/news-preview/:id" element={<NewsPreview />} />
           {/* User Routes Start */}
           <Route path="/create_use" element={<AddUser />} />
           <Route path="change_password" element={<ChangePassword />} />
