@@ -24,7 +24,7 @@ export default function View({
   canDelete,
   canUpdate,
 }) {
-  // ***************** Table Header Columns ************************* //
+  // ***************** Table Header Columns *************************s //
   const tableRef = useRef(null);
 
   const columns = [
