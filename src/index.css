@@ -1,0 +1,54 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Public Sans", sans-serif;
+}
+
+.ql-editor {
+  font-size: 16px; /* Set default font size */
+}
+
+.custom-quill {
+  border: 1px solid rgba(99, 115, 129, 0.32); /* Border for the entire component */
+  border-radius: 8px; /* Overall border radius */
+  overflow: hidden; /* Prevents overflow of inner components */
+}
+
+.custom-quill .ql-toolbar {
+  border: none; /* Remove separate border for the toolbar */
+  background: #fff; /* Background for the toolbar */
+}
+
+.custom-quill .ql-container {
+  min-height: 200px; /* Minimum height for the editor */
+}
+
+.ql-container > .ql-snow {
+  border: none;
+}
+
+/* Style the select input box */
+.MuiTablePagination-root .MuiSelect-select.MuiInputBase-input {
+  padding-right: 16px !important; /* more space for the icon */
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(145, 158, 171, 0.48) !important;
+  border-radius: 6px !important;
+  background-color: #fff;
+}
+
+/* Style the input container */
+.MuiTablePagination-root .MuiInputBase-root {
+  position: relative; /* allows absolute icon placement inside */
+  padding-right: 8px !important;
+  border-radius: 6px !important;
+}
+
+/* Target the arrow icon wrapper */
+.MuiTablePagination-root .MuiInputBase-root svg {
+  position: absolute;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none; /* avoid blocking select dropdown trigger */
+}
