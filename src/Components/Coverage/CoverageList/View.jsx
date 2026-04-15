@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import axios from "../../../api/axios";
 import { Box, Table } from "@mui/material";
 import CustomeHeader from "../../Common/Table/CustomeHeader";
@@ -8,8 +8,12 @@ import ConfirmationModal from "../../Common/RemoveConfirmation/ConfirmationModal
 import CoverageMap from "./CoverageMap";
 import Body from "./View/Body";
 import { useNavigate } from "react-router-dom";
+import { getErrorMessage } from "../../../lib/getErrorMessage";
+import { hasPermission } from "../../../lib/hasPermission";
+import { DataContext } from "../../../DataProcessing/DataProcessing";
 
 export default function View() {
+  const { auth } = useContext(DataContext);
   const [areas, setAreas] = useState([]);
   const [zones, setZones] = useState([]);
   const [page, setPage] = useState(0);
@@ -22,7 +26,17 @@ export default function View() {
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
   const [polygonData, setPolygonData] = useState([]);
   const navigate = useNavigate();
-
+  const canDelete = hasPermission(
+    auth?.permissions,
+    "coverage-list",
+    "canDelete",
+  );
+  const canUpdate = hasPermission(
+    auth?.permissions,
+    "add-coverage",
+    "canUpdate",
+  );
+  const hasAction = canDelete || canUpdate;
   const tableRef = useRef(null);
   const [tableWidth, setTableWidth] = useState("auto");
 
@@ -97,7 +111,7 @@ export default function View() {
       }
     } catch (error) {
       console.error("Error deleting area:", error);
-      toast.error(error.response?.data?.error || "Failed to delete area.");
+      toast.error(getErrorMessage(error, "Failed to delete area"));
     } finally {
       toast.dismiss(removingToast);
       setDataToDelete(null);
@@ -108,7 +122,7 @@ export default function View() {
     // Assuming you want to use the row ID in the URL
     const id = typeof selectedRow === "string" ? selectedRow : selectedRow?._id;
     if (id) {
-      navigate(`/edit-coverage/${id}`);
+      navigate(`/add-coverage/${id}`);
     } else {
       toast.error("Invalid ID for redirection.");
     }
@@ -140,7 +154,7 @@ export default function View() {
         <Table>
           <CustomeHeader
             columns={columns}
-            includeActions={true}
+            includeActions={hasAction ? true : false}
             includeDrag={false}
           />
           <Body
@@ -157,6 +171,9 @@ export default function View() {
             setLoading={setLoading}
             handleOpenMapModal={handleOpenMapModal}
             redirectEdit={redirectEdit}
+            canDelete={canDelete}
+            hasAction={hasAction}
+            canUpdate={canUpdate}
           />
         </Table>
       </Box>

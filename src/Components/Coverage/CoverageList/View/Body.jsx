@@ -21,6 +21,9 @@ export default function Body({
   setIsModalOpen,
   redirectEdit,
   handleOpenMapModal,
+  canDelete,
+  hasAction,
+  canUpdate,
 }) {
   const getZoneNameById = (zoneId) => {
     const found = zones.find((zone) => zone._id === zoneId);
@@ -153,22 +156,24 @@ export default function Body({
             >
               View in map
             </TableCell>
-            <TableCell
-              align="center"
-              sx={{
-                minWidth: 64,
-                maxWidth: 64,
-              }}
-            >
-              <Tooltip title="Actions">
-                <IconButton
-                  sx={{ width: "40px", height: "40px" }}
-                  onClick={(event) => handleOpenMenu(event, data)}
-                >
-                  <Icon name="more" color="#919EAB" size={24} />
-                </IconButton>
-              </Tooltip>
-            </TableCell>
+            {hasAction && (
+              <TableCell
+                align="center"
+                sx={{
+                  minWidth: 64,
+                  maxWidth: 64,
+                }}
+              >
+                <Tooltip title="Actions">
+                  <IconButton
+                    sx={{ width: "40px", height: "40px" }}
+                    onClick={(event) => handleOpenMenu(event, data)}
+                  >
+                    <Icon name="more" color="#919EAB" size={24} />
+                  </IconButton>
+                </Tooltip>
+              </TableCell>
+            )}
           </TableRow>
         ))}
       </TableBody>
@@ -179,7 +184,7 @@ export default function Body({
         anchorEl={open}
         onClose={handleCloseMenu}
         menuItems={[
-          {
+          canUpdate && {
             label: "Edit",
             iconName: "Edit",
             onClick: () => {
@@ -187,7 +192,7 @@ export default function Body({
               handleCloseMenu();
             },
           },
-          {
+          canDelete && {
             label: "Delete",
             iconName: "Remove",
             onClick: () => {
@@ -230,4 +235,7 @@ Body.propTypes = {
   setDataToDelete: PropTypes.func.isRequired,
   open: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]).isRequired,
   handleOpenMapModal: PropTypes.func.isRequired,
+  canDelete: PropTypes.bool,
+  hasAction: PropTypes.bool,
+  canUpdate: PropTypes.bool,
 };

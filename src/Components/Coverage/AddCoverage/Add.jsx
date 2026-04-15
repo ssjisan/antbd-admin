@@ -1,13 +1,17 @@
 import { Box, Grid, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "../../../api/axios";
+import { getErrorMessage } from "../../../lib/getErrorMessage";
 
 import Form from "./Form";
 import Map from "./Map";
+import { DataContext } from "../../../DataProcessing/DataProcessing";
+import { hasPermission } from "../../../lib/hasPermission";
 
 export default function Area() {
+  const { auth } = useContext(DataContext);
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [areaName, setAreaName] = useState("");
@@ -16,6 +20,11 @@ export default function Area() {
   const [address, setAddress] = useState("");
   const [polygons, setPolygons] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const canCreate = hasPermission(
+    auth?.permissions,
+    "add-coverage",
+    "canCreate",
+  );
 
   const { id } = useParams(); // Undefined for "add", valid for "edit"
   const navigate = useNavigate();
@@ -92,7 +101,7 @@ export default function Area() {
       }
     } catch (error) {
       toast.dismiss(toastId);
-      toast.error(error.response?.data?.error || "Failed to save area.");
+      toast.error(getErrorMessage(error, "Failed to Save area"));
     }
   };
 
@@ -116,17 +125,20 @@ export default function Area() {
             address={address}
             setAddress={setAddress}
             onSave={handleSaveArea}
+            canCreate={canCreate}
           />
         </Grid>
 
-        <Grid item xs={12} md={7}>
-          <Map
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            polygons={polygons}
-            setPolygons={setPolygons}
-          />
-        </Grid>
+        {canCreate && (
+          <Grid item xs={12} md={7}>
+            <Map
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              polygons={polygons}
+              setPolygons={setPolygons}
+            />
+          </Grid>
+        )}
       </Grid>
     </Box>
   );

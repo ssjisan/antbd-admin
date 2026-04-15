@@ -117,6 +117,7 @@ export default function MainRouters() {
               {/* Coverage */}
               <Route path="/add-zone" element={<AddZone />} />
               <Route path="/add-coverage" element={<AddCoverageArea />} />
+              <Route path="/add-coverage/:id" element={<AddCoverageArea />} />
               <Route path="/coverage-list" element={<CoverageAreaList />} />
 
               {/* Success Stories */}

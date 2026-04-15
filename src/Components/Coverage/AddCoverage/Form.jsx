@@ -20,13 +20,14 @@ export default function Form({
   setAddress,
   onSave,
   error,
+  canCreate,
 }) {
   const imageUrl = imagePreview
     ? typeof imagePreview === "object" && imagePreview.url
       ? imagePreview.url
       : typeof imagePreview === "string"
-      ? imagePreview
-      : URL.createObjectURL(imagePreview)
+        ? imagePreview
+        : URL.createObjectURL(imagePreview)
     : null;
 
   return (
@@ -74,10 +75,17 @@ export default function Form({
             </>
           ) : (
             <Stack sx={{ textAlign: "center" }}>
-              <Typography color="text.primary" variant="h6" sx={{ fontWeight: 500 }}>
+              <Typography
+                color="text.primary"
+                variant="h6"
+                sx={{ fontWeight: 500 }}
+              >
                 Click here to upload a cover
               </Typography>
-              <Typography variant="body2" sx={{ color: "#919EAB", fontWeight: 500 }}>
+              <Typography
+                variant="body2"
+                sx={{ color: "#919EAB", fontWeight: 500 }}
+              >
                 Allowed *.jpeg, *.jpg, *.png max size of 3 Mb
               </Typography>
             </Stack>
@@ -100,7 +108,11 @@ export default function Form({
               borderRadius: "12px",
             }}
           >
-            <Typography color="text.primary" variant="body2" sx={{ fontWeight: 600 }}>
+            <Typography
+              color="text.primary"
+              variant="body2"
+              sx={{ fontWeight: 600 }}
+            >
               {error.fileName} - {error.fileSize} Mb
             </Typography>
             <Typography
@@ -144,15 +156,17 @@ export default function Form({
         onChange={(e) => setAddress(e.target.value)}
       />
 
-      <Button
-        variant="contained"
-        color="primary"
-        fullWidth
-        sx={{ mt: 2 }}
-        onClick={onSave}
-      >
-        Save Area
-      </Button>
+      {canCreate && (
+        <Button
+          variant="contained"
+          color="primary"
+          fullWidth
+          sx={{ mt: 2 }}
+          onClick={onSave}
+        >
+          Save Area
+        </Button>
+      )}
     </Box>
   );
 }
@@ -170,6 +184,7 @@ Form.propTypes = {
   setAddress: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   error: PropTypes.object,
+  canCreate: PropTypes.bool,
 };
 
 Form.defaultProps = {
