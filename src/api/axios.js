@@ -8,7 +8,7 @@ const API = axios.create({
 // 🔐 Request interceptor (attach token automatically)
 API.interceptors.request.use(
   (config) => {
-    const auth = JSON.parse(sessionStorage.getItem("auth"));
+    const auth = JSON.parse(localStorage.getItem("auth"));
     const token = auth?.token;
 
     if (token) {
@@ -20,19 +20,16 @@ API.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-// 🚨 Response interceptor (handle 401 globally)
 API.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error.response?.status;
     const requestUrl = error.config?.url;
 
-    // 🚫 Do NOT auto redirect if the request itself is login
     const isLoginRequest = requestUrl?.includes("/login");
 
     if (status === 401 && !isLoginRequest) {
-      sessionStorage.removeItem("auth");
-
+      localStorage.removeItem("auth");
       // Better than window.location.href
       window.location.replace("/login");
     }

@@ -1,8 +1,8 @@
 import { Box, Grid, Stack, Typography } from "@mui/material";
-import InputFields from "../Components/UserAuth/Login/InputFields";
+import InputFields from "../Components/UserAuth/ForgotPassword/InputField";
 import { Logo } from "../assets/Logo";
 
-export default function Login() {
+export default function ForgotPassword() {
   return (
     <Box sx={{ position: "relative" }}>
       <Stack

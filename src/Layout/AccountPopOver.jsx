@@ -76,7 +76,7 @@ export default function AccountPopOver() {
       user: null,
       token: "",
     });
-    sessionStorage.removeItem("auth");
+    localStorage.removeItem("auth");
     navigate("/login");
   };
   return (

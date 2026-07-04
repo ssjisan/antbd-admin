@@ -31,6 +31,11 @@ import CoverageAreaList from "../Page/Coverage/CoverageAreaList";
 import SuccessStoriesList from "../Page/SuccessStories/SuccessStoriesList";
 import SuccessStoriesEditor from "../Page/SuccessStories/SuccessStoriesEditor";
 import SuccessStoriesPreview from "../Page/SuccessStories/SuccessStoriesPreview";
+import GalleryList from "../Page/Gallery/GalleryList";
+import UploadGallery from "../Page/Gallery/UploadGallery";
+import ForgotPassword from "../UserAuth/ForgotPassword";
+import VerifiyOtp from "../UserAuth/VerifiyOtp";
+import ResetPassword from "../UserAuth/ResetPassword";
 
 export default function MainRouters() {
   const { loading } = useContext(DataContext);
@@ -60,6 +65,9 @@ export default function MainRouters() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/password-change" element={<PasswordChange />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/verify-otp" element={<VerifiyOtp />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route element={<PrivateRoute />}>
           <Route element={<MainLayout />}>
             <Route path="/change-password" element={<ChangePasswordForm />} />
@@ -70,56 +78,44 @@ export default function MainRouters() {
             <Route element={<PermissionRoute />}>
               {/* Dashbaord */}
               <Route path="/" element={<Dashboard />} />
-
               {/* Pages */}
               <Route path="/pages" element={<Pages />} />
               <Route path="/page-settings" element={<PageSettings />} />
               <Route path="/page-settings/:id" element={<PageSettings />} />
-
               {/* Roles */}
               <Route path="/roles" element={<Roles />} />
               <Route path="/role-settings" element={<RoleSettings />} />
               <Route path="/role-settings/:id" element={<RoleSettings />} />
-
               {/* Users */}
               <Route path="/users" element={<Users />} />
               <Route path="/user-settings" element={<UserSettings />} />
               <Route path="/user-settings/:id" element={<UserSettings />} />
-
               {/* Backup */}
               <Route path="/backup" element={<Backup />} />
-
               {/* Connection request */}
               <Route
                 path="/connection-request"
                 element={<ConnectionRequest />}
               />
-
               {/* Slider */}
               <Route path="/slider" element={<Slider />} />
               <Route path="/slider-settings" element={<SliderSeetings />} />
               <Route path="/slider-settings/:id" element={<SliderSeetings />} />
-
               {/* Clients */}
               <Route path="/client" element={<Client />} />
-
               {/* Membership*/}
               <Route path="/memberships" element={<Membership />} />
-
               {/* Contact Info*/}
               <Route path="/contact-info" element={<ContactInfo />} />
-
               {/* Package */}
               <Route path="/add-package" element={<AddPackage />} />
               <Route path="/add-package/:id" element={<AddPackage />} />
               <Route path="/package-list" element={<PackageList />} />
-
               {/* Coverage */}
               <Route path="/add-zone" element={<AddZone />} />
               <Route path="/add-coverage" element={<AddCoverageArea />} />
               <Route path="/add-coverage/:id" element={<AddCoverageArea />} />
               <Route path="/coverage-list" element={<CoverageAreaList />} />
-
               {/* Success Stories */}
               <Route path="/success-stories" element={<SuccessStoriesList />} />
               <Route
@@ -130,6 +126,9 @@ export default function MainRouters() {
                 path="/success-stories-editor/:id"
                 element={<SuccessStoriesEditor />}
               />
+              {/* Gallery */}
+              <Route path="/gallery" element={<GalleryList />} />
+              <Route path="/gallery-settings" element={<UploadGallery />} />
             </Route>
           </Route>
         </Route>

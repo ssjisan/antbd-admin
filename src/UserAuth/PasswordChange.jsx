@@ -6,7 +6,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { Logo } from "../assets/Logo";
-import PasswordChangeFields from "../Components/Login/PasswordChangeFields";
+import PasswordChangeFields from "../Components/UserAuth/Login/PasswordChangeFields";
 
 export default function PasswordChange() {
   const forBelow776 = useMediaQuery("(max-width:776px)");

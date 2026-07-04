@@ -2,8 +2,7 @@ import { useState } from "react";
 
 export default function AuthProvider() {
   const [auth, setAuth] = useState(() => {
-    const data = sessionStorage.getItem("auth");
-
+    const data = localStorage.getItem("auth");
     if (data) {
       const parsed = JSON.parse(data);
       return {
@@ -19,8 +18,7 @@ export default function AuthProvider() {
     };
   });
 
-  const [loading] = useState(false); // ❗ no need useEffect anymore
-
+  const [loading] = useState(false);
   return {
     auth,
     setAuth,

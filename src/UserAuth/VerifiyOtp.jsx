@@ -1,8 +1,8 @@
 import { Box, Grid, Stack, Typography } from "@mui/material";
-import InputFields from "../Components/UserAuth/Login/InputFields";
 import { Logo } from "../assets/Logo";
+import InputField from "../Components/UserAuth/VerifyOtp/InputField";
 
-export default function Login() {
+export default function VerifiyOtp() {
   return (
     <Box sx={{ position: "relative" }}>
       <Stack
@@ -57,7 +57,7 @@ export default function Login() {
           </Box>
         </Grid>
         <Grid item xs={12} sm={12} md={6} lg={8}>
-          <InputFields />
+          <InputField />
         </Grid>
       </Grid>
     </Box>

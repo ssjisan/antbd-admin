@@ -11,12 +11,12 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useContext, useState } from "react";
-import { DataContext } from "../../DataProcessing/DataProcessing";
-import Icon from "../Icon";
+import { DataContext } from "../../../DataProcessing/DataProcessing";
+import Icon from "../../Icon";
 
 import { useNavigate } from "react-router-dom";
-import axios from "../../api/axios";
 import toast from "react-hot-toast";
+import API from "../../../api/axios";
 
 export default function PasswordChangeFields() {
   const forBelow776 = useMediaQuery("(max-width:776px)");
@@ -58,7 +58,7 @@ export default function PasswordChangeFields() {
         return;
       }
 
-      await axios.post(
+      await API.post(
         "/change-password",
         {
           currentPassword,

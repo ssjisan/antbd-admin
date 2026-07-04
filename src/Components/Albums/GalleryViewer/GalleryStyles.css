@@ -1,0 +1,40 @@
+.image-gallery-slide {
+  height: 680px; /* Fixed height for the slider */
+}
+
+.image-gallery-slide img {
+  height: 100%; /* Full height of the container */
+  width: auto; /* Maintain aspect ratio */
+  object-fit: contain; /* Keep the image within bounds without distortion */
+}
+
+/* Optional: Make the image gallery responsive */
+@media (max-width: 768px) {
+  .image-gallery-slide {
+    height: 480px; /* Adjust height for smaller screens */
+  }
+}
+
+.image-gallery-thumbnails {
+  display: flex; /* Use flexbox for alignment */
+  flex-wrap: wrap; /* Allow wrapping if necessary */
+  justify-content: center; /* Center the thumbnails */
+}
+
+/* Ensure thumbnails are a fixed size */
+.image-gallery-thumbnail {
+  width: 64px !important; /* Fixed width */
+  height: 64px !important; /* Fixed height */
+  overflow: hidden; /* Prevent overflow */
+  margin: 4px; /* Add margin for spacing */
+}
+
+.image-gallery-thumbnail img {
+  width: 100% !important; /* Fill the button */
+  height: 100% !important; /* Fill the button */
+  object-fit: cover; /* Ensure the image covers the button */
+}
+
+.image-gallery-thumbnails-container{
+  display: flex;
+}
